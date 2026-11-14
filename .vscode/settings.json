@@ -1,0 +1,27 @@
+{
+    "java.project.sourcePaths": ["src"],
+    "java.project.outputPath": "bin",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Users\\Khalissta Arteja\\javafx-sdk\\javafx-sdk-27\\lib\\javafx.base.jar",
+        "c:\\Users\\Khalissta Arteja\\javafx-sdk\\javafx-sdk-27\\lib\\javafx.controls.jar",
+        "c:\\Users\\Khalissta Arteja\\javafx-sdk\\javafx-sdk-27\\lib\\javafx.fxml.jar",
+        "c:\\Users\\Khalissta Arteja\\javafx-sdk\\javafx-sdk-27\\lib\\javafx.graphics.jar",
+        "c:\\Users\\Khalissta Arteja\\javafx-sdk\\javafx-sdk-27\\lib\\javafx.media.jar",
+        "c:\\Users\\Khalissta Arteja\\javafx-sdk\\javafx-sdk-27\\lib\\javafx.swing.jar",
+        "c:\\Users\\Khalissta Arteja\\javafx-sdk\\javafx-sdk-27\\lib\\javafx.web.jar",
+        "c:\\Users\\Khalissta Arteja\\javafx-sdk\\javafx-sdk-27\\lib\\javafx-swt.jar",
+        "c:\\Users\\Khalissta Arteja\\javafx-sdk\\javafx-sdk-27\\lib\\jdk.jsobject.jar",
+        "c:\\Users\\Khalissta Arteja\\javafx-sdk\\javafx-sdk-27\\lib\\jfx.incubator.input.jar",
+        "c:\\Users\\Khalissta Arteja\\javafx-sdk\\javafx-sdk-27\\lib\\jfx.incubator.richtext.jar",
+        "c:\\Users\\Khalissta Arteja\\Downloads\\postgresql-42.7.14.jar"
+    ],
+
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-25",
+            "path": "C:/Program Files/Java/jdk-27",
+            "default": true
+        }
+    ]
+}

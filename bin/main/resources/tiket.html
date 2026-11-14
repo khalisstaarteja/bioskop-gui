@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Tiket</title>
+<!--CSS-->
+</head>
+<body class="tiket">
+  <div class="invoice-box">
+    <div class="header">
+      <div class="title">TIKET BIOSKOP</div>
+      <div class="subtitle">Invoice #{{tiketNumber}}</div>
+    </div>
+
+    <div class="meta">
+      <div>
+        <div class="label">Atas Nama</div>
+        <div class="value">{{customerName}}</div>
+      </div>
+      <div>
+        <div class="label">Tanggal Cetak</div>
+        <div class="value">{{date}}</div>
+      </div>
+    </div>
+
+    <table class="items">
+      {{itemRows}}
+    </table>
+
+    <div class="footer">Diterbitkan oleh {{sellerName}} &bull; Tunjukkan tiket ini di loket</div>
+  </div>
+</body>
+</html>

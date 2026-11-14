@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="12.0" styleClass="sidebar" prefWidth="230.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+   <children>
+      <Label fx:id="loggedUserLabel" text="Login sebagai: -" styleClass="user-label" wrapText="true"/>
+      
+      <VBox spacing="6.0" styleClass="menu-section">
+         <Label text="Navigasi Menu Admin" styleClass="menu-header"/>
+         <Button text="Beranda" onAction="#handleShowBeranda" maxWidth="Infinity" styleClass="menu-button"/>
+         <Button text="Kelola Bioskop" onAction="#showBioskopView" maxWidth="Infinity" styleClass="menu-button"/>
+         <Button text="Kelola Studio" onAction="#showStudioView" maxWidth="Infinity" styleClass="menu-button"/>
+         <Button text="Kelola Film" onAction="#showFilmView" maxWidth="Infinity" styleClass="menu-button"/>
+         <Button text="Kelola Jadwal Tayang" onAction="#showJadwalView" maxWidth="Infinity" styleClass="menu-button"/>
+         <Button text="Kelola User" onAction="#showUserView" maxWidth="Infinity" styleClass="menu-button"/>
+         <Button text="Lihat Pemesanan" onAction="#showPemesananAdminView" maxWidth="Infinity" styleClass="menu-button"/>
+      </VBox>
+      
+      <VBox spacing="5.0" styleClass="menu-section" VBox.vgrow="ALWAYS" alignment="BOTTOM_CENTER">
+         <children>
+            <Button text="Logout" onAction="#handleLogout" maxWidth="Infinity" styleClass="logout-button"/>
+         </children>
+      </VBox>
+   </children>
+</VBox>

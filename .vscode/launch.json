@@ -1,0 +1,44 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "type": "java",
+            "name": "App",
+            "request": "launch",
+            "mainClass": "App",
+            "projectName": "bioskop_b8cac0df"
+        },
+        {
+            "type": "java",
+            "name": "App",
+            "request": "launch",
+            "mainClass": "App",
+            "projectName": "MVC_XML_2da5fad3",
+            "vmArgs": "--module-path \"C:/Users/Khalissta Arteja/javafx-sdk/javafx-sdk-27/lib\" --add-modules javafx.controls,javafx.fxml --enable-native-access=javafx.graphics"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "main.java.view.Main",
+            "projectName": "MVCGUI_FXML_51bdee2f",
+            "vmArgs": "--module-path \"C:/Users/Khalissta Arteja/javafx-sdk/javafx-sdk-27/lib\" --add-modules javafx.controls,javafx.fxml --enable-native-access=javafx.graphics"
+        },
+        {
+            "type": "java",
+            "name": "App",
+            "request": "launch",
+            "mainClass": "App",
+            "projectName": "MVCGUI_FXML_51bdee2f",
+            "vmArgs": "--module-path \"C:/Users/Khalissta Arteja/javafx-sdk/javafx-sdk-27/lib\" --add-modules javafx.controls,javafx.fxml --enable-native-access=javafx.graphics"
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}",
+            "vmArgs":"--module-path \"C:/Users/Khalissta Arteja/javafx-sdk/javafx-sdk-27/lib\" --add-modules javafx.controls,javafx.fxml --enable-native-access=javafx.graphics"
+        }
+    ]
+}

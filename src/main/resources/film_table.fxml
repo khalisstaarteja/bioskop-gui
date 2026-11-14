@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="main.java.controller.FilmTableController">
+    <padding><Insets bottom="10.0" left="10.0" right="10.0" top="10.0" /></padding>
+    <children>
+        <HBox spacing="20.0">
+            <GridPane hgap="10.0" vgap="10.0">
+                <children>
+                    <Label text="Kode Film:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <TextField fx:id="kodeFilmField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                    <Label text="Judul Film:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <TextField fx:id="judulField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                    <Label text="Genre:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    <TextField fx:id="genreField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                    <Label text="Durasi (Menit):" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    <TextField fx:id="durasiField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                    <Label text="Poster:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                    <Button text="Pilih Gambar Poster" onAction="#handleChoosePoster" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                    <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                        <Button onAction="#handleSubmit" text="Submit" />
+                        <Button onAction="#handleUpdate" text="Update" />
+                        <Button onAction="#handleDelete" text="Delete" />
+                    </HBox>
+                </children>
+            </GridPane>
+            <ImageView fx:id="posterImageView" fitHeight="160.0" fitWidth="120.0" preserveRatio="true" />
+        </HBox>
+
+        <TableView fx:id="filmTable" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn text="Kode Film"><cellValueFactory><PropertyValueFactory property="kodeFilm" /></cellValueFactory></TableColumn>
+                <TableColumn text="Judul"><cellValueFactory><PropertyValueFactory property="judul" /></cellValueFactory></TableColumn>
+                <TableColumn text="Genre"><cellValueFactory><PropertyValueFactory property="genre" /></cellValueFactory></TableColumn>
+                <TableColumn text="Durasi"><cellValueFactory><PropertyValueFactory property="durasi" /></cellValueFactory></TableColumn>
+                <TableColumn fx:id="posterColumn" text="Poster"><cellValueFactory><PropertyValueFactory property="poster" /></cellValueFactory></TableColumn>
+            </columns>
+        </TableView>
+    </children>
+</VBox>

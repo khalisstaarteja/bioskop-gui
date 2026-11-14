@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="main.java.controller.StudioTableController">
+    <padding><Insets bottom="10.0" left="10.0" right="10.0" top="10.0" /></padding>
+    <children>
+        <GridPane hgap="10.0" vgap="10.0">
+            <children>
+                <Label text="Kode Studio:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="kodeStudioField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                <Label text="Nomor Studio:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <TextField fx:id="nomorStudioField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                <Label text="Jenis Studio:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <ComboBox fx:id="jenisStudioComboBox" promptText="Pilih Jenis..." GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                <Label text="Harga Tiket:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                <TextField fx:id="hargaField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                <Label text="Bioskop:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                <ComboBox fx:id="bioskopComboBox" promptText="Pilih Bioskop..." GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                    <Button onAction="#handleSubmit" text="Submit" />
+                    <Button onAction="#handleUpdate" text="Update" />
+                    <Button onAction="#handleDelete" text="Delete" />
+                </HBox>
+            </children>
+        </GridPane>
+
+        <TableView fx:id="studioTable" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn text="Kode Studio"><cellValueFactory><PropertyValueFactory property="kodeStudio" /></cellValueFactory></TableColumn>
+                <TableColumn text="Nomor"><cellValueFactory><PropertyValueFactory property="nomorStudio" /></cellValueFactory></TableColumn>
+                <TableColumn text="Jenis"><cellValueFactory><PropertyValueFactory property="jenisStudio" /></cellValueFactory></TableColumn>
+                <TableColumn text="Harga"><cellValueFactory><PropertyValueFactory property="harga" /></cellValueFactory></TableColumn>
+                <TableColumn fx:id="bioskopColumn" text="Bioskop" />
+            </columns>
+        </TableView>
+    </children>
+</VBox>

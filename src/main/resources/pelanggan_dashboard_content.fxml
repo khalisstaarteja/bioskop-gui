@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="20.0" 
+      stylesheets="@../css/style.css" 
+      styleClass="root" 
+      xmlns="http://javafx.com/javafx" 
+      xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="main.java.controller.PelangganDashboardContentController">
+   <padding>
+      <Insets top="20" right="20" bottom="20" left="20"/>
+   </padding>
+   <children>
+      <!-- Judul Dashboard -->
+      <VBox spacing="5.0">
+         <Label text="Beranda Pelanggan" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+         <Label text="Jelajahi film terbaru dan lihat riwayat tiket bioskop Anda." style="-fx-font-size: 13px; -fx-text-fill: #7f8c8d;"/>
+      </VBox>
+
+      <!-- Carousel -->
+      <VBox style="-fx-background-color: #ffffff; -fx-padding: 20; -fx-background-radius: 10; -fx-border-color: #dcdde1; -fx-border-radius: 10;" spacing="15.0">
+         <Label text="Film Terbaru (Recently Added)" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+         
+         <HBox spacing="30.0" alignment="CENTER">
+            <!-- Tombol Prev -->
+            <Button text="❮" onAction="#handlePrevMovie" styleClass="button" style="-fx-font-size: 16px; -fx-pref-width: 45px; -fx-pref-height: 45px;"/>
+            
+            <!-- Poster & Detail Film -->
+            <HBox spacing="20.0" alignment="CENTER">
+               <ImageView fx:id="posterImageView" fitHeight="180.0" fitWidth="130.0" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 8, 0, 0, 4);"/>
+               
+               <VBox spacing="8.0" alignment="CENTER_LEFT" prefWidth="250.0">
+                  <Label fx:id="movieTitleLabel" text="Judul Film" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                  <Label fx:id="movieGenreLabel" text="Genre &amp; Durasi" style="-fx-font-size: 13px; -fx-text-fill: #7f8c8d; -fx-wrap-text: true;"/>
+               </VBox>
+            </HBox>
+            <Button text="❯" onAction="#handleNextMovie" styleClass="button" style="-fx-font-size: 16px; -fx-pref-width: 45px; -fx-pref-height: 45px;"/>
+         </HBox>
+      </VBox>
+
+      <!-- Statistik-->
+      <VBox spacing="10.0">
+         <Label text="Statistik Aktivitas Menonton Anda" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+         
+         <HBox spacing="20.0">
+            <children>
+               <VBox style="-fx-background-color:rgb(0, 0, 0); -fx-padding: 15; -fx-background-radius: 8;" prefWidth="240.0" spacing="5.0">
+                  <Label text="Total Tiket Dibeli" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+                  <Label fx:id="totalTiketSayaLabel" text="0 Tiket" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+               </VBox>
+            </children>
+         </HBox>
+      </VBox>
+   </children>
+</VBox>

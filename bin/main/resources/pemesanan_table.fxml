@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="15.0" stylesheets="@/main/resources/css/style.css" styleClass="root" 
+      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="main.java.controller.PemesananAdminController">
+   <padding>
+      <Insets top="20" right="20" bottom="20" left="20"/>
+   </padding>
+   <children>
+      <Label text="Kelola Semua Data Pemesanan (Admin)" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+      
+      <!-- Tabel Seluruh Pemesanan Pelanggan -->
+      <TableView fx:id="pemesananTable" VBox.vgrow="ALWAYS">
+        <columns>
+          <TableColumn fx:id="idColumn" text="No. Pesanan" prefWidth="100.0"/>
+          <TableColumn fx:id="pelangganColumn" text="Nama Pelanggan" prefWidth="150.0"/>
+          <TableColumn fx:id="filmColumn" text="Film" prefWidth="200.0"/>
+          <TableColumn fx:id="jadwalColumn" text="Jadwal Tayang" prefWidth="150.0"/>
+          <TableColumn fx:id="jumlahColumn" text="Jumlah" prefWidth="70.0"/>
+          <TableColumn fx:id="totalColumn" text="Total Bayar" prefWidth="120.0"/>
+          <TableColumn fx:id="metodeColumn" text="Pembayaran" prefWidth="120.0"/>
+        </columns>
+      </TableView>
+
+      <!-- Tombol Aksi Tambahan untuk Admin (Opsional) -->
+      <HBox spacing="10.0" alignment="CENTER_RIGHT">
+         <children>
+            <Button text="Refresh Data" onAction="#handleRefresh" styleClass="button"/>
+         </children>
+      </HBox>
+   </children>
+</VBox>

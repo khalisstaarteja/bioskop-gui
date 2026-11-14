@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="15.0" stylesheets="@../css/style.css" styleClass="root" 
+      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="main.java.controller.RiwayatController">
+   <padding>
+      <Insets top="20" right="20" bottom="20" left="20"/>
+   </padding>
+   <children>
+      <Label text="Riwayat Pemesanan Tiket Anda" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+      <!-- Tabel Riwayat -->
+      <TableView fx:id="riwayatTable" VBox.vgrow="ALWAYS" prefHeight="400.0">
+        <columns>
+          <TableColumn fx:id="nomorColumn" text="No. Pesanan" prefWidth="60.0"/>
+          <TableColumn fx:id="filmColumn" text="Film" prefWidth="180.0"/>
+          <TableColumn fx:id="jadwalColumn" text="Jadwal Tayang" prefWidth="160.0"/>
+          <TableColumn fx:id="jumlahColumn" text="Jumlah Tiket" prefWidth="100.0"/>
+          <TableColumn fx:id="totalColumn" text="Total Harga" prefWidth="140.0"/>
+        </columns>
+      </TableView>
+   </children>
+</VBox>

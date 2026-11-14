@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane fx:id="rootPane" prefHeight="700.0" prefWidth="1100.0" 
+            stylesheets="@/main/resources/css/style.css" styleClass="root-pane"
+            xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" 
+            fx:controller="main.java.controller.DashboardController">
+   
+   <!-- Sisi kiri akan diisi otomatis oleh sidebar_admin.fxml atau sidebar_pelanggan.fxml melalui Java code -->
+   
+   <!-- Sisi tengah menampung Tab untuk Beranda, Form Pemesanan, Riwayat, dll -->
+   <center>
+      <TabPane fx:id="mainTabPane" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER"/>
+   </center>
+   
+</BorderPane>
