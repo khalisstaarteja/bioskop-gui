@@ -25,7 +25,7 @@
 
       <!-- Carousel -->
       <VBox style="-fx-background-color: #ffffff; -fx-padding: 20; -fx-background-radius: 10; -fx-border-color: #dcdde1; -fx-border-radius: 10;" spacing="15.0">
-         <Label text="Film Terbaru (Recently Added)" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+         <Label text="Film Terbaru Hanya di Bioskop Kami" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
          
          <HBox spacing="30.0" alignment="CENTER">
             <!-- Tombol Prev -->

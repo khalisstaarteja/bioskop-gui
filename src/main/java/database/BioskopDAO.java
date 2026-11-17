@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import main.java.model.Bioskop;
+import main.java.model.Studio;
 
 public class BioskopDAO {
     public List<Bioskop> getAllBioskop() throws SQLException {
@@ -66,19 +67,39 @@ public class BioskopDAO {
 
     public List<Bioskop> getBioskopWithStudio() throws SQLException {
         List<Bioskop> list = new ArrayList<>();
-        String sql = "SELECT DISTINCT b.* FROM bioskop b JOIN studio s ON b.id = s.bioskop_id";
+        String sql = "SELECT id, kode_bioskop, nama_bioskop, lokasi, list_studio " +
+                     "FROM bioskop WHERE cardinality(list_studio) > 0 ORDER BY nama_bioskop";
+        String sqlStudio = "SELECT id, kode_studio, nomor_studio, jenis_studio, harga " +
+                           "FROM studio WHERE id = ANY(?) ORDER BY nomor_studio";
     
         try (Connection conn = PostgreSQLConnection.getConnection();
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+             ResultSet rs = stmt.executeQuery(sql);
+             PreparedStatement ps = conn.prepareStatement(sqlStudio)) {
     
             while (rs.next()) {
                 Bioskop bioskop = new Bioskop(
                     rs.getInt("id"),
                     rs.getString("kode_bioskop"),
                     rs.getString("nama_bioskop"),
-                    rs.getString("lokasi")
-                );
+                    rs.getString("lokasi"));
+    
+                Array arr = rs.getArray("list_studio");
+                if (arr != null) {
+                    Integer[] ids = (Integer[]) arr.getArray();
+                    ps.setArray(1, conn.createArrayOf("integer", ids));
+                    try (ResultSet rs2 = ps.executeQuery()) {
+                        while (rs2.next()) {
+                            bioskop.addStudio(new Studio(
+                                rs2.getInt("id"),
+                                rs2.getString("kode_studio"),
+                                rs2.getInt("nomor_studio"),
+                                rs2.getString("jenis_studio"),
+                                bioskop,
+                                rs2.getFloat("harga")));
+                        }
+                    }
+                }
                 list.add(bioskop);
             }
         }

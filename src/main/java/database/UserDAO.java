@@ -1,5 +1,5 @@
 package main.java.database;
-
+import org.mindrot.jbcrypt.BCrypt;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,36 +16,45 @@ public class UserDAO {
             sql = "SELECT u.id, u.nama, u.password, u.role, a.username " +
                   "FROM users u " +
                   "JOIN admin a ON u.id = a.admin_id " +
-                  "WHERE a.username = ? AND u.password = ? AND u.role = 'Admin'";
+                  "WHERE a.username = ? AND u.role = 'Admin'";
         } else if ("Pelanggan".equalsIgnoreCase(role)) {
             sql = "SELECT u.id, u.nama, u.password, u.role, p.email " +
                   "FROM users u " +
                   "JOIN pelanggan p ON u.id = p.pelanggan_id " +
-                  "WHERE p.email = ? AND u.password = ? AND u.role = 'Pelanggan'";
+                  "WHERE p.email = ? AND u.role = 'Pelanggan'";
         } else {
             return null;
         }
 
         try (Connection conn = PostgreSQLConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, identifier);
-            pstmt.setString(2, password);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
+                    String hash = rs.getString("password");
+
+                    boolean cocok;
+                    try {
+                        cocok = BCrypt.checkpw(password, hash);
+                    } catch (IllegalArgumentException e) {
+                        return null;
+                    }
+                    if (!cocok) {
+                        return null;
+                    }
                     int id = rs.getInt("id");
                     String nama = rs.getString("nama");
-                    String pass = rs.getString("password");
                     String userRole = rs.getString("role");
 
                     if ("Admin".equalsIgnoreCase(userRole)) {
                         String username = rs.getString("username");
-                        Admin admin = new Admin(nama, pass, username);
+                        Admin admin = new Admin(nama, hash, username);
                         admin.setId(id);
                         return admin;
                     } else if ("Pelanggan".equalsIgnoreCase(userRole)) {
                         String email = rs.getString("email");
-                        Pelanggan pelanggan = new Pelanggan(nama, email, pass, userRole);
+                        Pelanggan pelanggan = new Pelanggan(nama, email, hash, userRole);
                         pelanggan.setId(id);
                         return pelanggan;
                     }
@@ -129,6 +138,7 @@ public class UserDAO {
 
     // Simpan data user baru
     public void saveUser(User user) throws SQLException {
+        String hashed = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(12));
         String sqlUser = "INSERT INTO users (nama, password, role) VALUES (?, ?, ?)";
         String sqlAdmin = "INSERT INTO admin (admin_id, username) VALUES (?, ?)";
         String sqlPelanggan = "INSERT INTO pelanggan (pelanggan_id, email) VALUES (?, ?)";
@@ -138,7 +148,7 @@ public class UserDAO {
             // Simpan ke tabel users
             try (PreparedStatement pstmtUser = conn.prepareStatement(sqlUser, Statement.RETURN_GENERATED_KEYS)) {
                 pstmtUser.setString(1, user.getNama());
-                pstmtUser.setString(2, user.getPassword());
+                pstmtUser.setString(2, hashed);
                 pstmtUser.setString(3, user.getRole());
                 pstmtUser.executeUpdate();
 
@@ -187,7 +197,11 @@ public class UserDAO {
                 try (PreparedStatement ps = conn.prepareStatement(
                 "UPDATE users SET nama = ?, password = ?, role = ? WHERE id = ?")) {
                     ps.setString(1, user.getNama());
-                    ps.setString(2, user.getPassword());
+                    String pass = user.getPassword();
+                    if (pass != null && !pass.startsWith("$2")) {
+                        pass = BCrypt.hashpw(pass, BCrypt.gensalt(12));
+                    }
+                    ps.setString(2, pass);
                     ps.setString(3, user.getRole());
                     ps.setInt(4, id);
                     ps.executeUpdate();

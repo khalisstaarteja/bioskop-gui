@@ -59,11 +59,9 @@ public class JadwalFilmTableController {
             // Listener: Jika bioskop dipilih, otomatis load studio yang ada di bioskop itu
             bioskopComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
                 if (newVal != null) {
-                    loadStudioByBioskop(newVal.getId());
+                    studioComboBox.setItems(FXCollections.observableArrayList(newVal.getListStudio()));
                 } else {
-                    if (studioComboBox != null) {
-                        studioComboBox.getItems().clear();
-                    }
+                    studioComboBox.getItems().clear();
                 }
             });
 

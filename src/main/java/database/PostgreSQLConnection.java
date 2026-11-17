@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class PostgreSQLConnection {
-    private static final String URL = "jdbc:postgresql://localhost:5432/oop?currentSchema=bioskop";
+    private static final String URL = "jdbc:postgresql://localhost:5432/bioskop";
     private static final String USER = "khal";
     private static final String PASSWORD = "12345";
 

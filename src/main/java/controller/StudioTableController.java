@@ -41,7 +41,6 @@ public class StudioTableController {
             if (listBioskop == null || listBioskop.isEmpty()) {
                 // Beritahu admin agar input data dasar terlebih dahulu
                 showAlert("Perhatian", "Belum ada Bioskop yang terdaftar! Silakan input data Bioskop dan Studio terlebih dahulu.");
-                return;
             }
             
             bioskopComboBox.setItems(FXCollections.observableArrayList(listBioskop));

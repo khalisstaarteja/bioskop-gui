@@ -14,7 +14,8 @@
         "c:\\Users\\Khalissta Arteja\\javafx-sdk\\javafx-sdk-27\\lib\\jdk.jsobject.jar",
         "c:\\Users\\Khalissta Arteja\\javafx-sdk\\javafx-sdk-27\\lib\\jfx.incubator.input.jar",
         "c:\\Users\\Khalissta Arteja\\javafx-sdk\\javafx-sdk-27\\lib\\jfx.incubator.richtext.jar",
-        "c:\\Users\\Khalissta Arteja\\Downloads\\postgresql-42.7.14.jar"
+        "c:\\Users\\Khalissta Arteja\\Downloads\\postgresql-42.7.14.jar",
+        "c:\\Users\\Khalissta Arteja\\Downloads\\jbcrypt-0.4.jar"
     ],
 
     "java.configuration.runtimes": [

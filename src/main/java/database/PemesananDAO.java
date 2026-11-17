@@ -6,6 +6,7 @@ import java.util.List;
 import main.java.model.Bioskop;
 import main.java.model.Film;
 import main.java.model.JadwalFilm;
+import main.java.model.Pelanggan;
 import main.java.model.Pemesanan;
 import main.java.model.Studio;
 import main.java.model.User;
@@ -182,24 +183,24 @@ public class PemesananDAO {
 
     // Simpan data pemesanan baru ke database
     public void savePemesanan(Pemesanan p) throws SQLException {
-        String updateKursi = "UPDATE bioskop.jadwal_film SET kursi_terisi = kursi_terisi + ? " +
-                             "WHERE id = ? AND kursi_terisi + ? <= kapasitas";
-        String insert = "INSERT INTO bioskop.pemesanan " +
+        String updateKursi = "UPDATE jadwal_film SET kursi_terisi = kursi_terisi + ? " +
+                            "WHERE id = ? AND kursi_terisi + ? <= kapasitas";
+        String insert = "INSERT INTO pemesanan " +
                         "(nomor_pemesanan, user_id, jadwal_id, jumlah_pemesanan, metode_pembayaran, total_bayar, waktu) " +
                         "VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
-    
+
         try (Connection conn = PostgreSQLConnection.getConnection()) {
             conn.setAutoCommit(false);
             try (PreparedStatement upd = conn.prepareStatement(updateKursi)) {
                 upd.setInt(1, p.getJumlahPemesanan());
                 upd.setInt(2, p.getJadwal().getId());
                 upd.setInt(3, p.getJumlahPemesanan());
-    
+
                 if (upd.executeUpdate() == 0) {
                     conn.rollback();
                     throw new SQLException("Kursi tidak mencukupi atau jadwal sudah penuh.");
                 }
-    
+
                 try (PreparedStatement ins = conn.prepareStatement(insert)) {
                     ins.setInt(1, p.getNomorPemesanan());
                     ins.setInt(2, p.getUser().getId());
@@ -209,6 +210,10 @@ public class PemesananDAO {
                     ins.setInt(6, (int) p.getTotalBayar());
                     ins.executeUpdate();
                 }
+
+                // Sinkronkan pelanggan.list_pemesanan (satu transaksi dengan insert)
+                syncListPemesanan(conn, p.getUser().getId());
+
                 conn.commit();
             } catch (SQLException e) {
                 conn.rollback();
@@ -218,35 +223,154 @@ public class PemesananDAO {
             }
         }
     }
+
     // Update data pemesanan berdasarkan ID
     public void updatePemesanan(Pemesanan pemesanan, int id) throws SQLException {
         String sql = "UPDATE pemesanan SET nomor_pemesanan = ?, user_id = ?, jadwal_id = ?, jumlah_pemesanan = ?, metode_pembayaran = ?, total_bayar = ? WHERE id = ?";
 
-        try (Connection conn = PostgreSQLConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = PostgreSQLConnection.getConnection()) {
+            // Simpan user lama sebelum diupdate
+            int userLama = getUserIdOfPemesanan(conn, id);
 
-            pstmt.setInt(1, pemesanan.getNomorPemesanan());
-            pstmt.setInt(2, pemesanan.getUser().getId());
-            pstmt.setInt(3, pemesanan.getJadwal().getId());
-            pstmt.setInt(4, pemesanan.getJumlahPemesanan());
-            pstmt.setString(5, pemesanan.getMetodePembayaran());
-            pstmt.setFloat(6, pemesanan.getTotalBayar());
-            pstmt.setInt(7, id);
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, pemesanan.getNomorPemesanan());
+                pstmt.setInt(2, pemesanan.getUser().getId());
+                pstmt.setInt(3, pemesanan.getJadwal().getId());
+                pstmt.setInt(4, pemesanan.getJumlahPemesanan());
+                pstmt.setString(5, pemesanan.getMetodePembayaran());
+                pstmt.setFloat(6, pemesanan.getTotalBayar());
+                pstmt.setInt(7, id);
+                pstmt.executeUpdate();
+            }
 
-            pstmt.executeUpdate();
+            // Sync user baru, dan user lama kalau pemesanan pindah user
+            syncListPemesanan(conn, pemesanan.getUser().getId());
+            if (userLama != -1 && userLama != pemesanan.getUser().getId()) {
+                syncListPemesanan(conn, userLama);
+            }
         }
     }
 
     // Hapus data pemesanan berdasarkan ID
     public void deletePemesanan(int id) throws SQLException {
         String sql = "WITH del AS (DELETE FROM pemesanan WHERE id = ? RETURNING jadwal_id, jumlah_pemesanan) " +
-                     "UPDATE jadwal_film j SET kursi_terisi = j.kursi_terisi - del.jumlah_pemesanan " +
-                     "FROM del WHERE j.id = del.jadwal_id";
-    
+                    "UPDATE jadwal_film j SET kursi_terisi = j.kursi_terisi - del.jumlah_pemesanan " +
+                    "FROM del WHERE j.id = del.jadwal_id";
+
+        try (Connection conn = PostgreSQLConnection.getConnection()) {
+            // Ambil user sebelum pemesanan dihapus
+            int userId = getUserIdOfPemesanan(conn, id);
+
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, id);
+                pstmt.executeUpdate();
+            }
+
+            if (userId != -1) syncListPemesanan(conn, userId);
+        }
+    }
+
+    public List<Pelanggan> getAllPelangganWithPemesanan() throws SQLException {
+        List<Pelanggan> list = new ArrayList<>();
+        String sql = "SELECT p.pelanggan_id, p.email, p.list_pemesanan, u.id AS user_id, u.nama, u.password, u.role " +
+                    "FROM pelanggan p JOIN users u ON p.pelanggan_id = u.id ORDER BY u.nama";
+        String sqlPemesanan = "SELECT pm.id, pm.nomor_pemesanan, pm.jumlah_pemesanan, pm.metode_pembayaran, pm.total_bayar, " +
+                            "j.id AS jadwal_id, j.kode_jadwal, j.tanggal, j.jam, j.kapasitas, j.kursi_terisi, " +
+                            "s.id AS studio_id, s.kode_studio, s.nomor_studio, s.jenis_studio, s.harga, " +
+                            "b.id AS bioskop_id, b.kode_bioskop, b.nama_bioskop, b.lokasi, " +
+                            "f.id AS film_id, f.kode_film, f.judul, f.genre, f.durasi, f.poster " +
+                            "FROM pemesanan pm " +
+                            "JOIN jadwal_film j ON pm.jadwal_id = j.id " +
+                            "JOIN studio s ON j.studio_id = s.id " +
+                            "JOIN bioskop b ON s.bioskop_id = b.id " +
+                            "JOIN film f ON j.film_id = f.id " +
+                            "WHERE pm.id = ANY(?) ORDER BY pm.id DESC";
+
         try (Connection conn = PostgreSQLConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
-            pstmt.executeUpdate();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            PreparedStatement ps = conn.prepareStatement(sqlPemesanan)) {
+
+            while (rs.next()) {
+                Pelanggan pelanggan = new Pelanggan(
+                    rs.getInt("user_id"),
+                    rs.getString("nama"),
+                    rs.getString("password"),
+                    rs.getString("role"),
+                    rs.getInt("pelanggan_id"),
+                    rs.getString("email"));
+
+                Array arr = rs.getArray("list_pemesanan");
+                if (arr != null) {
+                    Integer[] ids = (Integer[]) arr.getArray();
+                    ps.setArray(1, conn.createArrayOf("integer", ids));
+                    try (ResultSet rs2 = ps.executeQuery()) {
+                        while (rs2.next()) {
+                            Bioskop bioskop = new Bioskop(
+                                rs2.getInt("bioskop_id"),
+                                rs2.getString("kode_bioskop"),
+                                rs2.getString("nama_bioskop"),
+                                rs2.getString("lokasi"));
+
+                            Studio studio = new Studio(
+                                rs2.getInt("studio_id"),
+                                rs2.getString("kode_studio"),
+                                rs2.getInt("nomor_studio"),
+                                rs2.getString("jenis_studio"),
+                                bioskop,
+                                rs2.getFloat("harga"));
+
+                            Film film = new Film(
+                                rs2.getInt("film_id"),
+                                rs2.getString("kode_film"),
+                                rs2.getString("judul"),
+                                rs2.getString("genre"),
+                                rs2.getInt("durasi"),
+                                rs2.getBytes("poster"));
+
+                            JadwalFilm jadwal = new JadwalFilm(
+                                rs2.getInt("jadwal_id"),
+                                rs2.getString("kode_jadwal"),
+                                studio,
+                                film,
+                                rs2.getDate("tanggal").toLocalDate(),
+                                rs2.getTime("jam").toLocalTime(),
+                                rs2.getInt("kapasitas"),
+                                rs2.getInt("kursi_terisi"));
+
+                            pelanggan.addPemesanan(new Pemesanan(
+                                rs2.getInt("id"),
+                                rs2.getInt("nomor_pemesanan"),
+                                jadwal,
+                                rs2.getInt("jumlah_pemesanan"),
+                                rs2.getString("metode_pembayaran"),
+                                rs2.getFloat("total_bayar"),
+                                pelanggan));
+                        }
+                    }
+                }
+                list.add(pelanggan);
+            }
+        }
+        return list;
+    }
+    private void syncListPemesanan(Connection conn, int userId) throws SQLException {
+        String sql = "UPDATE pelanggan SET list_pemesanan = COALESCE(" +
+                     "(SELECT array_agg(id ORDER BY id) FROM pemesanan WHERE user_id = ?), '{}') " +
+                     "WHERE pelanggan_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, userId);
+            ps.executeUpdate();
+        }
+    }
+    
+    private int getUserIdOfPemesanan(Connection conn, int pemesananId) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("SELECT user_id FROM pemesanan WHERE id = ?")) {
+            ps.setInt(1, pemesananId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getInt(1) : -1;
+            }
         }
     }
 

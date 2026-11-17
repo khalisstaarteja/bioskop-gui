@@ -69,13 +69,10 @@ public class JadwalFilmDAO {
         return jadwalList;
     }
 
-    // Simpan jadwal film baru ke database
     public void saveJadwalFilm(JadwalFilm jadwal) throws SQLException {
         String sql = "INSERT INTO jadwal_film (kode_jadwal, studio_id, film_id, tanggal, jam, kapasitas, kursi_terisi) VALUES (?, ?, ?, ?, ?, ?, ?)";
-
         try (Connection conn = PostgreSQLConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
             pstmt.setString(1, jadwal.getKodeJadwal());
             pstmt.setInt(2, jadwal.getStudio().getId());
             pstmt.setInt(3, jadwal.getFilm().getId());
@@ -83,40 +80,46 @@ public class JadwalFilmDAO {
             pstmt.setTime(5, Time.valueOf(jadwal.getJam()));
             pstmt.setInt(6, jadwal.getKapasitas());
             pstmt.setInt(7, jadwal.getKursiTerisi());
-            
             pstmt.executeUpdate();
+    
+            syncListJadwal(conn, jadwal.getStudio().getId());
         }
     }
-
-    // Update data jadwal film berdasarkan ID
+    
     public void updateJadwalFilm(JadwalFilm jadwal, int id) throws SQLException {
         String sql = "UPDATE jadwal_film SET kode_jadwal = ?, studio_id = ?, film_id = ?, tanggal = ?, jam = ?, kapasitas = ?, kursi_terisi = ? WHERE id = ?";
-
-        try (Connection conn = PostgreSQLConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, jadwal.getKodeJadwal());
-            pstmt.setInt(2, jadwal.getStudio().getId());
-            pstmt.setInt(3, jadwal.getFilm().getId());
-            pstmt.setDate(4, Date.valueOf(jadwal.getTanggal()));
-            pstmt.setTime(5, Time.valueOf(jadwal.getJam()));
-            pstmt.setInt(6, jadwal.getKapasitas());
-            pstmt.setInt(7, jadwal.getKursiTerisi());
-            pstmt.setInt(8, id);
-
-            pstmt.executeUpdate();
+        try (Connection conn = PostgreSQLConnection.getConnection()) {
+            int studioLama = getStudioIdOfJadwal(conn, id);
+    
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, jadwal.getKodeJadwal());
+                pstmt.setInt(2, jadwal.getStudio().getId());
+                pstmt.setInt(3, jadwal.getFilm().getId());
+                pstmt.setDate(4, Date.valueOf(jadwal.getTanggal()));
+                pstmt.setTime(5, Time.valueOf(jadwal.getJam()));
+                pstmt.setInt(6, jadwal.getKapasitas());
+                pstmt.setInt(7, jadwal.getKursiTerisi());
+                pstmt.setInt(8, id);
+                pstmt.executeUpdate();
+            }
+    
+            syncListJadwal(conn, jadwal.getStudio().getId());
+            if (studioLama != -1 && studioLama != jadwal.getStudio().getId()) {
+                syncListJadwal(conn, studioLama);
+            }
         }
     }
-
-    // Hapus data jadwal film berdasarkan ID
+    
     public void deleteJadwalFilm(int id) throws SQLException {
-        String sql = "DELETE FROM jadwal_film WHERE id = ?";
-
-        try (Connection conn = PostgreSQLConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setInt(1, id);
-            pstmt.executeUpdate();
+        try (Connection conn = PostgreSQLConnection.getConnection()) {
+            int studioId = getStudioIdOfJadwal(conn, id);
+    
+            try (PreparedStatement pstmt = conn.prepareStatement("DELETE FROM jadwal_film WHERE id = ?")) {
+                pstmt.setInt(1, id);
+                pstmt.executeUpdate();
+            }
+    
+            if (studioId != -1) syncListJadwal(conn, studioId);
         }
     }
 
@@ -248,5 +251,25 @@ public class JadwalFilmDAO {
             }
         }
         return list;
+    }
+
+    private void syncListJadwal(Connection conn, int studioId) throws SQLException {
+        String sql = "UPDATE studio SET list_jadwal = COALESCE(" +
+                     "(SELECT array_agg(id ORDER BY tanggal, jam) FROM jadwal_film WHERE studio_id = ?), '{}') " +
+                     "WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, studioId);
+            ps.setInt(2, studioId);
+            ps.executeUpdate();
+        }
+    }
+    
+    private int getStudioIdOfJadwal(Connection conn, int jadwalId) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("SELECT studio_id FROM jadwal_film WHERE id = ?")) {
+            ps.setInt(1, jadwalId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getInt(1) : -1;
+            }
+        }
     }
 }
