@@ -223,7 +223,7 @@ public class PemesananController {
             String htmlContent = bacaResource("/main/resources/tiket.html");
             String css = bacaResource("/main/resources/css/style.css");
     
-            String tanggalSekarang = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+            String tanggalSekarang = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm"));
             String totalFormatted = String.format("%,.0f", p.getTotalBayar());
     
             String itemRows =

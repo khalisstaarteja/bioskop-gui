@@ -1,26 +1,38 @@
 package main.java.controller;
+
 import java.util.List;
 import java.sql.SQLException;
+import java.time.LocalDate;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import main.java.database.AdminDAO;
 import main.java.database.PelangganDAO;
 import main.java.database.UserDAO;
+import main.java.database.PemesananDAO;
 import main.java.model.Admin;
 import main.java.model.Pelanggan;
+import main.java.model.Pemesanan;
 import main.java.model.User;
 
 public class UserTableController {
-    @FXML private TextField namaField;
-    @FXML private PasswordField passwordField;
-    @FXML private ComboBox<String> roleComboBox;
-    @FXML private VBox dynamicFormContainer;
-    @FXML private TableView<User> userTable;
-    @FXML private TableColumn<User, String> extraColumn;
+    @FXML
+    private TextField namaField;
+    @FXML
+    private PasswordField passwordField;
+    @FXML
+    private ComboBox<String> roleComboBox;
+    @FXML
+    private VBox dynamicFormContainer;
+    @FXML
+    private TableView<User> userTable;
+    @FXML
+    private TableColumn<User, String> extraColumn;
 
     // Field dinamis yang dimasukkan ke dalam dynamicFormContainer
     private TextField usernameField;
@@ -31,6 +43,7 @@ public class UserTableController {
     private final UserDAO userDAO = new UserDAO();
     private final AdminDAO adminDAO = new AdminDAO();
     private final PelangganDAO pelangganDAO = new PelangganDAO();
+    private final PemesananDAO pemesananDAO = new PemesananDAO();
 
     private void refreshTable() {
         try {
@@ -110,8 +123,8 @@ public class UserTableController {
     private void handleSubmit() {
         String role = roleComboBox.getValue();
         String detail = "Admin".equals(role)
-                        ? usernameField.getText().trim()
-                        : emailField.getText().trim();
+                ? usernameField.getText().trim()
+                : emailField.getText().trim();
         if (namaField.getText().trim().isEmpty() || passwordField.getText().trim().isEmpty() || detail.isEmpty()) {
             showAlert("Warning", "Nama, Password dan Email/Username tidak boleh kosong!");
             return;
@@ -120,7 +133,7 @@ public class UserTableController {
         try {
             String nama = namaField.getText().trim();
             String pass = passwordField.getText().trim();
-           
+
             if ("Admin".equals(role)) {
                 String username = usernameField.getText().trim();
                 Admin admin = new Admin(nama, pass, username);
@@ -147,14 +160,15 @@ public class UserTableController {
 
         String selectedRole = roleComboBox.getValue();
         String detail = "Admin".equals(selectedRole)
-                        ? usernameField.getText().trim()
-                        : emailField.getText().trim();
+                ? usernameField.getText().trim()
+                : emailField.getText().trim();
 
         if (namaField.getText().trim().isEmpty() || passwordField.getText().trim().isEmpty() || detail.isEmpty()) {
             showAlert("Warning", "Nama, Password dan Email/Username tidak boleh kosong!");
             return;
         }
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin mengupdate user?", ButtonType.YES, ButtonType.NO);
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin mengupdate user?", ButtonType.YES,
+                ButtonType.NO);
         confirm.showAndWait();
         if (confirm.getResult() == ButtonType.YES) {
             try {
@@ -169,15 +183,14 @@ public class UserTableController {
                     if (selected instanceof Admin) {
                         ((Admin) selected).setUsername(username);
                     }
-                }
-                else if ("Pelanggan".equalsIgnoreCase(selectedRole)) {
+                } else if ("Pelanggan".equalsIgnoreCase(selectedRole)) {
                     String email = emailField.getText().trim();
 
                     if (selected instanceof Pelanggan) {
                         ((Pelanggan) selected).setEmail(email);
                     }
                 }
-                
+
                 userDAO.updateUser(selected, selected.getId());
                 refreshTable();
                 clearForm();
@@ -194,7 +207,8 @@ public class UserTableController {
             showAlert("No Selection", "Pilih data user yang ingin dihapus.");
             return;
         }
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin menghapus user?", ButtonType.YES, ButtonType.NO);
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin menghapus user?", ButtonType.YES,
+                ButtonType.NO);
         confirm.showAndWait();
         if (confirm.getResult() == ButtonType.YES) {
             try {
@@ -205,6 +219,73 @@ public class UserTableController {
                 showError("Delete Error", e.getMessage());
             }
         }
+    }
+
+    @FXML
+    private void handleViewDetails() {
+        User selected = userTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("No Selection", "Pilih data pelanggan yang ingin dilihat detail pesanannya.");
+            return;
+        }
+        if (!(selected instanceof Pelanggan)) {
+            showAlert("Info", "Admin tidak memiliki data pesanan. Pilih user dengan role Pelanggan.");
+            return;
+        }
+
+        List<Pemesanan> pesanan;
+        try {
+            pesanan = pelangganDAO.getAllPelangganWithPemesanan().stream()
+                    .filter(p -> p.getId() == selected.getId())
+                    .findFirst()
+                    .map(p -> (List<Pemesanan>) p.getListPemesanan())
+                    .orElse(List.of());
+        } catch (SQLException e) {
+            showError("Database Error", e.getMessage());
+            return;
+        }
+
+        TableView<Pemesanan> detailTable = new TableView<>();
+
+        TableColumn<Pemesanan, String> colNo = new TableColumn<>("No. Pesanan");
+        colNo.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(c.getValue().getNomorPemesanan())));
+
+        TableColumn<Pemesanan, String> colFilm = new TableColumn<>("Film");
+        colFilm.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getJadwal().getFilm().getJudul()));
+
+        TableColumn<Pemesanan, String> colBioskop = new TableColumn<>("Bioskop");
+        colBioskop.setCellValueFactory(
+                c -> new SimpleStringProperty(c.getValue().getJadwal().getStudio().getBioskop().getNamaBioskop()));
+
+        TableColumn<Pemesanan, String> colJadwal = new TableColumn<>("Jadwal Tayang");
+        colJadwal.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getJadwal().getTanggal()
+                + " | " + c.getValue().getJadwal().getJam()));
+
+        TableColumn<Pemesanan, String> colJumlah = new TableColumn<>("Jumlah");
+        colJumlah.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(c.getValue().getJumlahPemesanan())));
+
+        TableColumn<Pemesanan, String> colTotal = new TableColumn<>("Total Bayar");
+        colTotal.setCellValueFactory(
+                c -> new SimpleStringProperty("Rp " + String.format("%,.0f", c.getValue().getTotalBayar())));
+
+        TableColumn<Pemesanan, String> colMetode = new TableColumn<>("Pembayaran");
+        colMetode.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getMetodePembayaran()));
+
+        detailTable.getColumns().addAll(colNo, colFilm, colBioskop, colJadwal, colJumlah, colTotal, colMetode);
+        detailTable.setPlaceholder(new Label("Pelanggan ini belum memiliki pesanan."));
+        detailTable.setPrefSize(700, 250);
+        detailTable.setItems(FXCollections.observableArrayList(pesanan));
+
+        Alert detail = new Alert(Alert.AlertType.INFORMATION);
+        detail.setTitle("Detail Pesanan");
+        detail.setHeaderText("Pelanggan: " + selected.getNama()
+                + " \nEmail: " + ((Pelanggan) selected).getEmail());
+
+        Label teksAtas = new Label("Daftar pesanan pelanggan ini:");
+        teksAtas.setStyle("-fx-font-weight: bold;");
+
+        detail.getDialogPane().setContent(new VBox(10, teksAtas, detailTable));
+        detail.showAndWait();
     }
 
     private void clearForm() {

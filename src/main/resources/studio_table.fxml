@@ -42,5 +42,8 @@
                 <TableColumn fx:id="bioskopColumn" text="Bioskop" />
             </columns>
         </TableView>
+        <HBox spacing="10.0" alignment="CENTER_RIGHT">
+            <Button onAction="#handleViewDetails" text="View Details" />
+        </HBox>
     </children>
 </VBox>

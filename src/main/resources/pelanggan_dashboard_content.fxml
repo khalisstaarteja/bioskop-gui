@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox spacing="20.0" 
-      stylesheets="@../css/style.css" 
+      stylesheets="@@/main/resources/css/style.css" 
       styleClass="root" 
       xmlns="http://javafx.com/javafx" 
       xmlns:fx="http://javafx.com/fxml" 

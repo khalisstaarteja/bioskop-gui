@@ -5,27 +5,44 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.control.TableCell;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import main.java.database.FilmDAO;
+import main.java.database.StudioDAO;
 import main.java.model.Film;
+import main.java.model.JadwalFilm;
 
 public class FilmTableController {
-    @FXML private TextField kodeFilmField;
-    @FXML private TextField judulField;
-    @FXML private TextField genreField;
-    @FXML private TextField durasiField;
-    @FXML private ImageView posterImageView;
-    @FXML private TableView<Film> filmTable;
-    @FXML private TableColumn<Film, byte[]> posterColumn;
+    @FXML
+    private TextField kodeFilmField;
+    @FXML
+    private TextField judulField;
+    @FXML
+    private TextField genreField;
+    @FXML
+    private TextField durasiField;
+    @FXML
+    private ImageView posterImageView;
+    @FXML
+    private TableView<Film> filmTable;
+    @FXML
+    private TableColumn<Film, byte[]> posterColumn;
 
     private byte[] selectedPosterBytes;
     private final FilmDAO filmDAO = new FilmDAO();
+    private final StudioDAO studioDAO = new StudioDAO();
 
     private void refreshTable() {
         try {
@@ -62,12 +79,11 @@ public class FilmTableController {
             @Override
             protected void updateItem(byte[] imageBytes, boolean empty) {
                 super.updateItem(imageBytes, empty);
-                
+
                 // Jika poster ga ada, kosongkan cell
                 if (empty || imageBytes == null) {
                     setGraphic(null);
-                }
-                else {
+                } else {
                     // byte[] dari database diubah menjadi JavaFX
                     ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
                     Image image = new Image(bis);
@@ -90,8 +106,7 @@ public class FilmTableController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Pilih Poster Film");
         fileChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
-        );
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
         File file = fileChooser.showOpenDialog(null);
         if (file != null) {
             try {
@@ -142,7 +157,8 @@ public class FilmTableController {
             showAlert("No Selection", "Pilih data film yang ingin di-update.");
             return;
         }
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin mengupdate data?", ButtonType.YES, ButtonType.NO);
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin mengupdate data?", ButtonType.YES,
+                ButtonType.NO);
         confirm.showAndWait();
         if (confirm.getResult() == ButtonType.YES) {
             try {
@@ -162,7 +178,8 @@ public class FilmTableController {
             showAlert("No Selection", "Pilih data film yang ingin dihapus.");
             return;
         }
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin menghapus data?", ButtonType.YES, ButtonType.NO);
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin menghapus data?", ButtonType.YES,
+                ButtonType.NO);
         confirm.showAndWait();
         if (confirm.getResult() == ButtonType.YES) {
             try {
@@ -173,6 +190,75 @@ public class FilmTableController {
                 showError("Delete Error", e.getMessage());
             }
         }
+    }
+
+    @FXML
+    private void handleViewDetails() {
+        Film selected = filmTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("No Selection", "Pilih data film yang ingin dilihat detail jadwal tayangnya.");
+            return;
+        }
+
+        ImageView detailPosterImageView = new ImageView();
+        if (selected.getPoster() != null) {
+            ByteArrayInputStream bis = new ByteArrayInputStream(selected.getPoster());
+            detailPosterImageView.setImage(new Image(bis));
+        }
+        detailPosterImageView.setFitWidth(120);
+        detailPosterImageView.setFitHeight(180);
+        detailPosterImageView.setPreserveRatio(true);
+
+        TableView<JadwalFilm> jadwalTable = new TableView<>();
+
+        TableColumn<JadwalFilm, String> colKodeJadwal = new TableColumn<>("Kode Jadwal");
+        colKodeJadwal.setCellValueFactory(new PropertyValueFactory<>("kodeJadwal"));
+
+        TableColumn<JadwalFilm, String> colFilm = new TableColumn<>("Film");
+        colFilm.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFilm().getJudul()));
+
+        TableColumn<JadwalFilm, LocalDate> colTanggal = new TableColumn<>("Tanggal");
+        colTanggal.setCellValueFactory(new PropertyValueFactory<>("tanggal"));
+
+        TableColumn<JadwalFilm, LocalTime> colJam = new TableColumn<>("Jam");
+        colJam.setCellValueFactory(new PropertyValueFactory<>("jam"));
+
+        TableColumn<JadwalFilm, Integer> colKapasitas = new TableColumn<>("Kapasitas");
+        colKapasitas.setCellValueFactory(new PropertyValueFactory<>("kapasitas"));
+
+        TableColumn<JadwalFilm, String> colTerisi = new TableColumn<>("Terisi");
+        colTerisi.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(c.getValue().getKursiTerisi())));
+
+        jadwalTable.getColumns().addAll(colKodeJadwal, colFilm, colTanggal, colJam, colKapasitas, colTerisi);
+        jadwalTable.setPlaceholder(new Label("Film ini belum dijadwalkan."));
+        jadwalTable.setPrefSize(550, 250);
+
+        try {
+            List<JadwalFilm> jadwal = studioDAO.getStudioWithJadwal().stream()
+                    .flatMap(s -> s.getListJadwal().stream())
+                    .filter(j -> j.getFilm().getId() == selected.getId())
+                    .collect(Collectors.toList());
+
+            jadwalTable.setItems(FXCollections.observableArrayList(jadwal));
+        } catch (SQLException e) {
+            showError("Database Error", e.getMessage());
+            return;
+        }
+
+        Alert detail = new Alert(Alert.AlertType.INFORMATION);
+        detail.setTitle("Film Details");
+        detail.setHeaderText(selected.getKodeFilm() + " - " + selected.getJudul()
+                + "\nGenre: " + selected.getGenre()
+                + "\nDurasi: " + selected.getDurasi() + " menit");
+
+        Label teksAtas = new Label("Jadwal tayang film ini:");
+        teksAtas.setStyle("-fx-font-weight: bold;");
+
+        detail.setGraphic(detailPosterImageView);
+
+        VBox content = new VBox(10, teksAtas, jadwalTable);
+        detail.getDialogPane().setContent(content);
+        detail.showAndWait();
     }
 
     private void clearForm() {

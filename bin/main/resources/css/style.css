@@ -44,20 +44,21 @@ body.tiket {
   font-size: 13px;
 }
 
-.meta div { 
+.meta > div { 
     display: table-cell; 
     width: 50%; 
     vertical-align: top; 
 }
 
-.label { 
+.meta .label { 
     color: #7f8c8d; 
     font-size: 11px; 
     text-transform: uppercase; 
     margin-bottom: 3px; 
 }
 
-.value { 
+.meta .value { 
+    display: block;
     font-weight: 600; 
     font-size: 14px; 
 }

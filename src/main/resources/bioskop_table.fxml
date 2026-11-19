@@ -34,5 +34,8 @@
                 <TableColumn text="Lokasi"><cellValueFactory><PropertyValueFactory property="lokasi" /></cellValueFactory></TableColumn>
             </columns>
         </TableView>
+        <HBox spacing="10.0" alignment="CENTER_RIGHT">
+            <Button onAction="#handleViewDetails" text="View Details" />
+        </HBox>
     </children>
 </VBox>
