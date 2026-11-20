@@ -19,18 +19,30 @@ public class DashboardController {
     private User currentUser;
 
     public void setLoggedUser(User user) {
-    this.currentUser = user;
-    loadSidebar();   // tanpa argumen
+        this.currentUser = user;
+        loadSidebar();
 
-    if (mainTabPane != null) {
-        mainTabPane.getTabs().clear();
-        if (user instanceof Admin) {
-            loadDefaultAdminTab();
-        } else {
-            loadDefaultPelangganTab();
+        if (mainTabPane != null) {
+            mainTabPane.getTabs().clear();
+
+            mainTabPane.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
+                if (newTab != null) {
+                    Object ctrl = newTab.getUserData();
+                    if (ctrl instanceof JadwalFilmTableController) {
+                        ((JadwalFilmTableController) ctrl).refreshTable();
+                    } else if (ctrl instanceof StudioTableController) {
+                        ((StudioTableController) ctrl).refreshTable();
+                    }
+                }
+            });
+
+            if (user instanceof Admin) {
+                loadDefaultAdminTab();
+            } else {
+                loadDefaultPelangganTab();
+            }
         }
     }
-}
 
     private void loadSidebar() {
         try {
@@ -51,33 +63,36 @@ public class DashboardController {
             e.printStackTrace();
         }
     }
-    private void openTab(String title, String fxmlPath) {
-        if (mainTabPane == null) return;
+    private Object openTab(String title, String fxmlPath) {
+        if (mainTabPane == null) return null;
         
         for (Tab tab : mainTabPane.getTabs()) {
             if (tab.getText().equals(title)) {
                 mainTabPane.getSelectionModel().select(tab);
-                return;
+                return tab.getUserData(); // Ambil controller yg ada di tab
             }
         }
         try {
-            // fxmlPath langsung dari root resources (contoh: "/pemesanan_view.fxml")
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent view = loader.load();
             
-            // Injeksi user ke controller
             Object controller = loader.getController();
             if (controller instanceof PemesananController) {
                 ((PemesananController) controller).initUser(currentUser);
             } else if (controller instanceof RiwayatController) {
                 ((RiwayatController) controller).initUser(currentUser);
+            } else if (controller instanceof CariFilmController) {
+                ((CariFilmController) controller).initData(currentUser, this);
             }
 
             Tab newTab = new Tab(title, view);
+            newTab.setUserData(controller);
             mainTabPane.getTabs().add(newTab);
             mainTabPane.getSelectionModel().select(newTab);
+            return controller;
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
@@ -127,8 +142,16 @@ public class DashboardController {
     @FXML private void showPemesananAdminView() { openTab("Kelola Pemesanan", "/main/resources/pemesanan_table.fxml"); }
 
     // Navigasi Menu Pelanggan
+    @FXML private void showCariFilmView() { openTab("Cari Film", "/main/resources/cari_film.fxml"); }
     @FXML private void showPemesananView() { openTab("Form Pemesanan Tiket", "/main/resources/pemesanan_view.fxml"); }
     @FXML private void showRiwayatView() { openTab("Riwayat Pemesanan", "/main/resources/riwayat_table.fxml"); }
+
+    public void openPemesananWithJadwal(main.java.model.JadwalFilm jadwal) {
+        Object ctrl = openTab("Form Pemesanan Tiket", "/main/resources/pemesanan_view.fxml");
+        if (ctrl instanceof PemesananController) {
+            ((PemesananController) ctrl).setPreselectedJadwal(jadwal);
+        }
+    }
 
     @FXML private void handleLogout() {
         try {

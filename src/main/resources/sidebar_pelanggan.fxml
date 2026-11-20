@@ -11,6 +11,7 @@
       <VBox spacing="6.0" styleClass="menu-section">
          <Label text="Navigasi Pelanggan" styleClass="menu-header"/>
          <Button text="Beranda" onAction="#handleShowBeranda" maxWidth="Infinity" styleClass="menu-button"/>
+         <Button text="Cari Film" onAction="#showCariFilmView" maxWidth="Infinity" styleClass="menu-button"/>
          <Button text="Form Pemesanan" onAction="#showPemesananView" maxWidth="Infinity" styleClass="menu-button"/>
          <Button text="Riwayat Pemesanan" onAction="#showRiwayatView" maxWidth="Infinity" styleClass="menu-button"/>
       </VBox>

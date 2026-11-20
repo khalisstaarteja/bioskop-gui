@@ -34,7 +34,7 @@ public class JadwalFilmTableController {
 
     private List<Studio> allStudios;
 
-    private void refreshTable() {
+    public void refreshTable() {
         try {
             jadwalTable.setItems(FXCollections.observableArrayList(jadwalDAO.getAllJadwalFilm()));
             bioskopComboBox.setItems(FXCollections.observableArrayList(bioskopDAO.getBioskopWithStudio()));

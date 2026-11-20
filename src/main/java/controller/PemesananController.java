@@ -223,7 +223,7 @@ public class PemesananController {
             String htmlContent = bacaResource("/main/resources/tiket.html");
             String css = bacaResource("/main/resources/css/style.css");
     
-            String tanggalSekarang = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+            String tanggalSekarang = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm"));
             String totalFormatted = String.format("%,.0f", p.getTotalBayar());
     
             String itemRows =
@@ -283,5 +283,36 @@ public class PemesananController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public void setPreselectedJadwal(JadwalFilm jadwal) {
+        if (jadwal == null) return;
+
+        Bioskop targetBioskop = jadwal.getStudio().getBioskop();
+        Film targetFilm = jadwal.getFilm();
+
+        // pilih bioskop yg cocok berdasarkan id
+        if (bioskopComboBox != null) {
+            for (Bioskop b : bioskopComboBox.getItems()) {
+                if (b.getId() == targetBioskop.getId()) {
+                    bioskopComboBox.setValue(b);
+                    break;
+                }
+            }
+        }
+
+        // pilih film yg cocok berdasarkan id
+        if (filmComboBox != null) {
+            for (Film f : filmComboBox.getItems()) {
+                if (f.getId() == targetFilm.getId()) {
+                    filmComboBox.setValue(f);
+                    break;
+                }
+            }
+        }
+
+        if (jumlahTiketField != null) {
+            jumlahTiketField.requestFocus();
+        }
     }
 }

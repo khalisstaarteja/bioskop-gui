@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane stylesheets="@/main/resources/css/style.css" styleClass="root"
+           xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="main.java.controller.CariFilmController">
+
+    <!-- HALAMAN 1: LIST & SEARCH FILM -->
+    <VBox fx:id="listFilmView" spacing="15.0">
+        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+        <children>
+            <Label text="Cari Film &amp; Jadwal Tayang" styleClass="page-title"/>
+
+            <!-- Search Bar -->
+            <HBox spacing="10.0" alignment="CENTER_LEFT" styleClass="search-box">
+                <TextField fx:id="searchField" promptText="Cari judul film atau genre..."
+                           HBox.hgrow="ALWAYS" styleClass="search-field"/>
+                <Button text="Cari" onAction="#handleSearch" styleClass="button"/>
+                <Button text="Reset" onAction="#handleResetSearch" styleClass="btn-secondary"/>
+            </HBox>
+
+            <!-- Daftar Film (Poster Kiri, Info Kanan) -->
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+                <content>
+                    <VBox fx:id="filmListContainer" spacing="12.0">
+                        <padding><Insets top="5" right="5" bottom="5" left="5"/></padding>
+                    </VBox>
+                </content>
+            </ScrollPane>
+        </children>
+    </VBox>
+
+    <!-- HALAMAN 2: DETAIL FILM + LIST JADWAL TAYANG -->
+    <VBox fx:id="detailJadwalView" spacing="15.0" visible="false" managed="false">
+        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+        <children>
+            <!-- Tombol Kembali dipisah di baris atas -->
+            <VBox spacing="10.0" alignment="CENTER_LEFT">
+                <Button text="← Kembali ke Daftar Film" onAction="#handleBackToList" styleClass="btn-secondary"/>
+                <Label text="Detail Film &amp; Jadwal Tayang" styleClass="page-title"/>
+            </VBox>
+
+            <!-- Info Film Terpilih (Poster Kiri, Keterangan Kanan) -->
+            <HBox fx:id="selectedFilmHeader" spacing="20.0" alignment="CENTER_LEFT" styleClass="film-detail-header"/>
+
+            <Label text="Daftar Jadwal Tayang Tersedia:" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+            <!-- List Jadwal Film -->
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+                <content>
+                    <VBox fx:id="jadwalListContainer" spacing="10.0">
+                        <padding><Insets top="5" right="5" bottom="5" left="5"/></padding>
+                    </VBox>
+                </content>
+            </ScrollPane>
+        </children>
+    </VBox>
+
+</StackPane>

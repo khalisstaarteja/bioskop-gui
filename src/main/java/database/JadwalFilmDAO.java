@@ -123,18 +123,21 @@ public class JadwalFilmDAO {
         }
     }
 
-    // Ambil jadwal sesuai film
+    // Ambil jadwal aktif (belum lewat) sesuai film
     public List<JadwalFilm> getJadwalByFilmId(int filmId) throws SQLException {
         List<JadwalFilm> list = new ArrayList<>();
         
-        // Query untuk mengambil data jadwal beserta relasi film dan studionya
-        String sql = "SELECT j.id AS jadwal_id, j.tanggal, j.jam, " +
+        String sql = "SELECT j.id AS jadwal_id, j.kode_jadwal, j.tanggal, j.jam, j.kapasitas, j.kursi_terisi, " +
                      "f.id AS film_id, f.kode_film, f.judul, f.genre, f.durasi, f.poster, " +
-                     "s.id AS studio_id, s.nomor_studio, s.jenis, s.harga " +
+                     "s.id AS studio_id, s.kode_studio, s.nomor_studio, s.jenis_studio, s.harga, " +
+                     "b.id AS bioskop_id, b.kode_bioskop, b.nama_bioskop, b.lokasi " +
                      "FROM jadwal_film j " +
                      "JOIN film f ON j.film_id = f.id " +
                      "JOIN studio s ON j.studio_id = s.id " +
-                     "WHERE j.film_id = ?";
+                     "JOIN bioskop b ON s.bioskop_id = b.id " +
+                     "WHERE j.film_id = ? " +
+                     "AND (j.tanggal + j.jam) >= CURRENT_TIMESTAMP " +
+                     "ORDER BY j.tanggal ASC, j.jam ASC";
     
         try (Connection conn = PostgreSQLConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
