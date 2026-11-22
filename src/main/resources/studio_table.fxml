@@ -8,32 +8,42 @@
       fx:controller="main.java.controller.StudioTableController">
     <padding><Insets bottom="10.0" left="10.0" right="10.0" top="10.0" /></padding>
     <children>
-        <GridPane hgap="10.0" vgap="10.0">
+        <VBox styleClass="form-card">
             <children>
-                <Label text="Kode Studio:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                <TextField fx:id="kodeStudioField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <GridPane hgap="15.0" vgap="12.0">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="100.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="35.0"/>
+                        <ColumnConstraints minWidth="100.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="35.0"/>
+                    </columnConstraints>
+                    <children>
+                        <Label text="Kode Studio:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <TextField fx:id="kodeStudioField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <Label text="Nomor Studio:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                        <TextField fx:id="nomorStudioField" GridPane.columnIndex="3" GridPane.rowIndex="0" />
 
-                <Label text="Nomor Studio:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                <TextField fx:id="nomorStudioField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Jenis Studio:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="jenisStudioComboBox" promptText="Pilih Jenis..." maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Harga Tiket:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <TextField fx:id="hargaField" disable="true" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 
-                <Label text="Jenis Studio:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                <ComboBox fx:id="jenisStudioComboBox" promptText="Pilih Jenis..." GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label text="Bioskop:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <ComboBox fx:id="bioskopComboBox" promptText="Pilih Bioskop..." maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-                <Label text="Harga Tiket:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                <TextField fx:id="hargaField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-
-                <Label text="Bioskop:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                <ComboBox fx:id="bioskopComboBox" promptText="Pilih Bioskop..." GridPane.columnIndex="1" GridPane.rowIndex="4" />
-
-                <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                    <Button onAction="#handleSubmit" text="Submit" />
-                    <Button onAction="#handleUpdate" text="Update" />
-                    <Button onAction="#handleDelete" text="Delete" />
-                </HBox>
+                        <HBox spacing="10.0" alignment="CENTER_RIGHT" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                            <Button onAction="#handleSubmit" styleClass="submit-btn" text="Submit" />
+                            <Button onAction="#handleUpdate" styleClass="update-btn" text="Update" />
+                            <Button onAction="#handleDelete" styleClass="delete-btn" text="Delete" />
+                            <Button onAction="#clearForm" styleClass="clear-btn" text="Clear" />
+                        </HBox>
+                    </children>
+                </GridPane>
             </children>
-        </GridPane>
-
+        </VBox>
+        
         <TableView fx:id="studioTable" VBox.vgrow="ALWAYS">
+            <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
             <columns>
                 <TableColumn text="Kode Studio"><cellValueFactory><PropertyValueFactory property="kodeStudio" /></cellValueFactory></TableColumn>
                 <TableColumn text="Nomor"><cellValueFactory><PropertyValueFactory property="nomorStudio" /></cellValueFactory></TableColumn>

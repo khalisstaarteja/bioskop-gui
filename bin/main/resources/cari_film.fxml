@@ -13,7 +13,7 @@
            xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
            fx:controller="main.java.controller.CariFilmController">
 
-    <!-- HALAMAN 1: LIST & SEARCH FILM -->
+    <!-- Halaman 1: list dan search film -->
     <VBox fx:id="listFilmView" spacing="15.0">
         <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
         <children>
@@ -27,8 +27,8 @@
                 <Button text="Reset" onAction="#handleResetSearch" styleClass="btn-secondary"/>
             </HBox>
 
-            <!-- Daftar Film (Poster Kiri, Info Kanan) -->
-            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+            <!-- Daftar film -->
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
                 <content>
                     <VBox fx:id="filmListContainer" spacing="12.0">
                         <padding><Insets top="5" right="5" bottom="5" left="5"/></padding>
@@ -38,23 +38,20 @@
         </children>
     </VBox>
 
-    <!-- HALAMAN 2: DETAIL FILM + LIST JADWAL TAYANG -->
+    <!-- Halaman 2: detail film (list jadwal) -->
     <VBox fx:id="detailJadwalView" spacing="15.0" visible="false" managed="false">
         <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
         <children>
-            <!-- Tombol Kembali dipisah di baris atas -->
             <VBox spacing="10.0" alignment="CENTER_LEFT">
                 <Button text="← Kembali ke Daftar Film" onAction="#handleBackToList" styleClass="btn-secondary"/>
                 <Label text="Detail Film &amp; Jadwal Tayang" styleClass="page-title"/>
             </VBox>
-
-            <!-- Info Film Terpilih (Poster Kiri, Keterangan Kanan) -->
             <HBox fx:id="selectedFilmHeader" spacing="20.0" alignment="CENTER_LEFT" styleClass="film-detail-header"/>
 
-            <Label text="Daftar Jadwal Tayang Tersedia:" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <Label text="Daftar Jadwal Tayang Tersedia:" styleClass="section-title"/>
 
-            <!-- List Jadwal Film -->
-            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+            <!-- List jadwal film -->
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
                 <content>
                     <VBox fx:id="jadwalListContainer" spacing="10.0">
                         <padding><Insets top="5" right="5" bottom="5" left="5"/></padding>

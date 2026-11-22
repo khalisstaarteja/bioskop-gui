@@ -195,7 +195,9 @@ public class StudioDAO {
             }
         }
         return list;
-}
+    }
+    
+    // Sync ke bioskop
     private void syncListStudio(Connection conn, int bioskopId) throws SQLException {
         String sql = "UPDATE bioskop SET list_studio = COALESCE(" +
                      "(SELECT array_agg(id ORDER BY nomor_studio) FROM studio WHERE bioskop_id = ?), '{}') " +

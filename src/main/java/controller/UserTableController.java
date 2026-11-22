@@ -21,18 +21,12 @@ import main.java.model.Pemesanan;
 import main.java.model.User;
 
 public class UserTableController {
-    @FXML
-    private TextField namaField;
-    @FXML
-    private PasswordField passwordField;
-    @FXML
-    private ComboBox<String> roleComboBox;
-    @FXML
-    private VBox dynamicFormContainer;
-    @FXML
-    private TableView<User> userTable;
-    @FXML
-    private TableColumn<User, String> extraColumn;
+    @FXML private TextField namaField;
+    @FXML private PasswordField passwordField;
+    @FXML private ComboBox<String> roleComboBox;
+    @FXML private VBox dynamicFormContainer;
+    @FXML private TableView<User> userTable;
+    @FXML private TableColumn<User, String> extraColumn;
 
     // Field dinamis yang dimasukkan ke dalam dynamicFormContainer
     private TextField usernameField;
@@ -136,15 +130,16 @@ public class UserTableController {
 
             if ("Admin".equals(role)) {
                 String username = usernameField.getText().trim();
-                Admin admin = new Admin(nama, pass, username);
+                Admin admin = new Admin(-1, nama, pass, "Admin", -1, username);
                 userDAO.saveUser(admin);
             } else {
                 String email = emailField.getText().trim();
-                Pelanggan pelanggan = new Pelanggan(nama, email, pass, "Pelanggan");
+                Pelanggan pelanggan = new Pelanggan(-1, nama, pass, "Pelanggan", -1, email);
                 userDAO.saveUser(pelanggan);
             }
             refreshTable();
             clearForm();
+            showAlert("Sukses", "User berhasil ditambahkan!");
         } catch (Exception e) {
             showError("Submit Error", e.getMessage());
         }
@@ -169,6 +164,7 @@ public class UserTableController {
         }
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin mengupdate user?", ButtonType.YES,
                 ButtonType.NO);
+                confirm.getDialogPane().getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         confirm.showAndWait();
         if (confirm.getResult() == ButtonType.YES) {
             try {
@@ -194,6 +190,7 @@ public class UserTableController {
                 userDAO.updateUser(selected, selected.getId());
                 refreshTable();
                 clearForm();
+                showAlert("Sukses", "User berhasil diupdate!");
             } catch (Exception e) {
                 showError("Update Error", e.getMessage());
             }
@@ -209,14 +206,16 @@ public class UserTableController {
         }
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin menghapus user?", ButtonType.YES,
                 ButtonType.NO);
+        confirm.getDialogPane().getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         confirm.showAndWait();
         if (confirm.getResult() == ButtonType.YES) {
             try {
                 userDAO.deleteUser(selected.getId());
                 refreshTable();
                 clearForm();
+                showAlert("Sukses", "User berhasil dihapus!");
             } catch (Exception e) {
-                showError("Delete Error", e.getMessage());
+                showError("Delete Error", "User ini memiliki pesanan!");
             }
         }
     }
@@ -285,9 +284,11 @@ public class UserTableController {
         teksAtas.setStyle("-fx-font-weight: bold;");
 
         detail.getDialogPane().setContent(new VBox(10, teksAtas, detailTable));
+        detail.getDialogPane().getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         detail.showAndWait();
     }
 
+    @FXML
     private void clearForm() {
         namaField.clear();
         passwordField.clear();
@@ -300,6 +301,8 @@ public class UserTableController {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         alert.showAndWait();
     }
 
@@ -307,6 +310,8 @@ public class UserTableController {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setContentText(message);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         alert.showAndWait();
     }
 }

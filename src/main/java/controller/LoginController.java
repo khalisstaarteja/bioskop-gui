@@ -17,8 +17,7 @@ import main.java.model.Pelanggan;
 import main.java.model.User;
 
 public class LoginController {
-
-    // Komponen Form Login
+    // Komponen form login
     @FXML private GridPane loginPane;
     @FXML private ComboBox<String> loginRoleComboBox; 
     @FXML private Label identifierLabel;              
@@ -26,7 +25,7 @@ public class LoginController {
     @FXML private PasswordField passwordField;
     @FXML private Label errorLabel;
 
-    // Komponen Form Register Pelanggan
+    // Komponen form register pelanggan
     @FXML private GridPane registerPane;
     @FXML private TextField regNamaField;
     @FXML private TextField regEmailField;
@@ -37,12 +36,12 @@ public class LoginController {
 
     @FXML
     public void initialize() {
-        // 1. Masukkan pilihan role ke ComboBox Login
+        // Masukkan pilihan role ke ComboBox Login
         if (loginRoleComboBox != null) {
             loginRoleComboBox.setItems(FXCollections.observableArrayList("Admin", "Pelanggan"));
         }
 
-        // 2. Ubah label dan prompt text secara dinamis saat role dipilih
+        // Ubah label dan prompt text secara dinamis saat role dipilih
         if (loginRoleComboBox != null) {
             loginRoleComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
                 if ("Admin".equals(newVal)) {
@@ -135,7 +134,8 @@ public class LoginController {
             }
 
             // Buat objek Pelanggan baru dengan role "Pelanggan"
-            Pelanggan pelangganBaru = new Pelanggan(nama, email, pass, "Pelanggan");
+            Pelanggan pelangganBaru = new Pelanggan(-1, nama, pass, "Pelanggan", -1, email);
+
             
             // Simpan ke database melalui UserDAO
             userDAO.saveUser(pelangganBaru);

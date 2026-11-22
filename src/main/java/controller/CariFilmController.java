@@ -107,7 +107,7 @@ public class CariFilmController {
         }
     }
 
-    // Membuat tampilan kartu film: Poster di Kiri, Tulisan di Kanan
+    // Membuat tampilan kartu film: poster di Kiri, tulisan di kanan
     private HBox createFilmCard(Film film, boolean showDetailButton) {
         HBox card = new HBox(18);
         card.setAlignment(Pos.CENTER_LEFT);
@@ -217,11 +217,11 @@ public class CariFilmController {
             Region spacer = new Region();
             HBox.setHgrow(spacer, Priority.ALWAYS);
 
-            // Badge Status Hijau / Merah
+            // Badge Status hijau/meerah
             Label statusBadge = new Label(isAvailable ? "Available (" + sisaKursi + " kursi)" : "Habis (0 kursi)");
             statusBadge.getStyleClass().add(isAvailable ? "status-available" : "status-full");
 
-            // Tombol Pesan
+            // Tombol pesan
             Button btnPesan = new Button("Pesan");
             btnPesan.getStyleClass().add("btn-pesan-jadwal");
             btnPesan.setDisable(!isAvailable); // Tidak bisa diklik jika kursi 0

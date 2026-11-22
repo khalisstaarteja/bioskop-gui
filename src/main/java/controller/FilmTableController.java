@@ -28,20 +28,13 @@ import main.java.model.Film;
 import main.java.model.JadwalFilm;
 
 public class FilmTableController {
-    @FXML
-    private TextField kodeFilmField;
-    @FXML
-    private TextField judulField;
-    @FXML
-    private TextField genreField;
-    @FXML
-    private TextField durasiField;
-    @FXML
-    private ImageView posterImageView;
-    @FXML
-    private TableView<Film> filmTable;
-    @FXML
-    private TableColumn<Film, byte[]> posterColumn;
+    @FXML private TextField kodeFilmField;
+    @FXML private TextField judulField;
+    @FXML private TextField genreField;
+    @FXML private TextField durasiField;
+    @FXML private ImageView posterImageView;
+    @FXML private TableView<Film> filmTable;
+    @FXML private TableColumn<Film, byte[]> posterColumn;
 
     private byte[] selectedPosterBytes;
     private final FilmDAO filmDAO = new FilmDAO();
@@ -105,6 +98,7 @@ public class FilmTableController {
         });
     }
 
+    // Input poster (gambar)
     @FXML
     private void handleChoosePoster() {
         FileChooser fileChooser = new FileChooser();
@@ -122,6 +116,7 @@ public class FilmTableController {
         }
     }
 
+    // Baca inputan form
     private Film readFormFields() {
         String kode = kodeFilmField.getText().trim();
         String judul = judulField.getText().trim();
@@ -131,13 +126,20 @@ public class FilmTableController {
         return new Film(-1, kode, judul, genre, durasi, selectedPosterBytes);
     }
 
+    // Submit
     @FXML
     private void handleSubmit() {
-        if (kodeFilmField.getText().trim().isEmpty() || judulField.getText().trim().isEmpty()) {
-            showAlert("Warning", "Kode dan Judul Film tidak boleh kosong!");
+        // Tidak boleh null
+        if (kodeFilmField.getText().trim().isEmpty()
+            || judulField.getText().trim().isEmpty()
+            || genreField.getText().trim().isEmpty()
+            || durasiField.getText().trim().isEmpty()
+            || selectedPosterBytes == null) {
+            showAlert("Warning", "Semua data wajib diisi!");
             return;
         }
 
+        // Cek apakah kode sudah dipakai
         boolean kodeAda = filmTable.getItems().stream()
                 .anyMatch(f -> f.getKodeFilm().equalsIgnoreCase(kodeFilmField.getText().trim()));
         if (kodeAda) {
@@ -149,11 +151,13 @@ public class FilmTableController {
             filmDAO.saveFilm(readFormFields());
             refreshTable();
             clearForm();
+            showAlert("Sukses", "Film berhasil ditambahkan!");
         } catch (Exception e) {
             showError("Submit Error", e.getMessage());
         }
     }
 
+    // Update
     @FXML
     private void handleUpdate() {
         Film selected = filmTable.getSelectionModel().getSelectedItem();
@@ -163,18 +167,21 @@ public class FilmTableController {
         }
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin mengupdate data?", ButtonType.YES,
                 ButtonType.NO);
+                confirm.getDialogPane().getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         confirm.showAndWait();
         if (confirm.getResult() == ButtonType.YES) {
             try {
                 filmDAO.updateFilm(readFormFields(), selected.getId());
                 refreshTable();
                 clearForm();
+                showAlert("Sukses", "Film berhasil diupdate!");
             } catch (Exception e) {
                 showError("Update Error", e.getMessage());
             }
         }
     }
 
+    // Delete
     @FXML
     private void handleDelete() {
         Film selected = filmTable.getSelectionModel().getSelectedItem();
@@ -184,18 +191,21 @@ public class FilmTableController {
         }
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin menghapus data?", ButtonType.YES,
                 ButtonType.NO);
+        confirm.getDialogPane().getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         confirm.showAndWait();
         if (confirm.getResult() == ButtonType.YES) {
             try {
                 filmDAO.deleteFilm(selected.getId());
                 refreshTable();
                 clearForm();
+                showAlert("Sukses", "Film berhasil dihapus!");
             } catch (Exception e) {
-                showError("Delete Error", e.getMessage());
+                showError("Delete Error", "Jadwal film yang berkaitan harus dihapus terlebih dahulu!");
             }
         }
     }
 
+    // Detail
     @FXML
     private void handleViewDetails() {
         Film selected = filmTable.getSelectionModel().getSelectedItem();
@@ -249,14 +259,17 @@ public class FilmTableController {
         jadwalTable.setPrefSize(620, 250);
 
         try {
-            List<JadwalFilm> jadwalAktif = jadwalDAO.getJadwalByFilmId(selected.getId());
-            selected.setListJadwal(new java.util.ArrayList<>(jadwalAktif));
-
-            jadwalTable.setItems(FXCollections.observableArrayList(selected.getListJadwal()));
+            List<JadwalFilm> jadwalAktif = filmDAO.getFilmWithListJadwal().stream()
+                    .filter(f -> f.getId() == selected.getId())
+                    .flatMap(f -> f.getListJadwal().stream())
+                    .collect(Collectors.toList());
+        
+            jadwalTable.setItems(FXCollections.observableArrayList(jadwalAktif));
         } catch (SQLException e) {
             showError("Database Error", e.getMessage());
             return;
         }
+        
 
         Alert detail = new Alert(Alert.AlertType.INFORMATION);
         detail.setTitle("Film Details");
@@ -271,9 +284,11 @@ public class FilmTableController {
 
         VBox content = new VBox(10, teksAtas, jadwalTable);
         detail.getDialogPane().setContent(content);
+        detail.getDialogPane().getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         detail.showAndWait();
     }
 
+    @FXML
     private void clearForm() {
         kodeFilmField.clear();
         judulField.clear();
@@ -288,6 +303,8 @@ public class FilmTableController {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         alert.showAndWait();
     }
 
@@ -295,6 +312,8 @@ public class FilmTableController {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setContentText(message);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         alert.showAndWait();
     }
 }

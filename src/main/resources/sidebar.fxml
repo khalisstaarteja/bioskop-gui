@@ -7,8 +7,9 @@
 <VBox spacing="12.0" styleClass="sidebar" prefWidth="230.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
    <children>
       <Label fx:id="loggedUserLabel" text="Login sebagai: -" styleClass="user-label" wrapText="true"/>
-      
-      <VBox spacing="6.0" styleClass="menu-section">
+
+      <!-- Menu Admin -->
+      <VBox fx:id="adminMenu" spacing="6.0" styleClass="menu-section">
          <Label text="Navigasi Menu Admin" styleClass="menu-header"/>
          <Button text="Beranda" onAction="#handleShowBeranda" maxWidth="Infinity" styleClass="menu-button"/>
          <Button text="Kelola Bioskop" onAction="#showBioskopView" maxWidth="Infinity" styleClass="menu-button"/>
@@ -18,10 +19,21 @@
          <Button text="Kelola User" onAction="#showUserView" maxWidth="Infinity" styleClass="menu-button"/>
          <Button text="Lihat Pemesanan" onAction="#showPemesananAdminView" maxWidth="Infinity" styleClass="menu-button"/>
       </VBox>
-      
+
+      <!-- Menu Pelanggan -->
+      <VBox fx:id="pelangganMenu" spacing="6.0" styleClass="menu-section">
+         <Label text="Navigasi Pelanggan" styleClass="menu-header"/>
+         <Button text="Beranda" onAction="#handleShowBeranda" maxWidth="Infinity" styleClass="menu-button"/>
+         <Button text="Cari Film" onAction="#showCariFilmView" maxWidth="Infinity" styleClass="menu-button"/>
+         <Button text="Form Pemesanan" onAction="#showPemesananView" maxWidth="Infinity" styleClass="menu-button"/>
+         <Button text="Riwayat Pemesanan" onAction="#showRiwayatView" maxWidth="Infinity" styleClass="menu-button"/>
+      </VBox>
+
+      <!-- Logout (dipakai bersama) -->
       <VBox spacing="5.0" styleClass="menu-section" VBox.vgrow="ALWAYS" alignment="BOTTOM_CENTER">
          <children>
             <Button text="Logout" onAction="#handleLogout" maxWidth="Infinity" styleClass="logout-button"/>
+            <Button text="Exit" onAction="#handleExit" maxWidth="Infinity" styleClass="submit-btn"/>
          </children>
       </VBox>
    </children>

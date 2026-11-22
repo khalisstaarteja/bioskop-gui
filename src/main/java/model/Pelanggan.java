@@ -17,16 +17,12 @@ public class Pelanggan extends User implements Login {
         this.pelangganId.set(pelangganId);
         this.email.set(email);
     }
-
-    public Pelanggan(String nama, String email, String password, String role) {
-        super(nama, password, role); 
-        this.email.set(email);
-    }
     
     @Override
     public String showMenu() {
-        return "/main/resources/sidebar_pelanggan.fxml";
+        return "/main/resources/pelanggan_dashboard_content.fxml";
     }
+
 
     @Override
     public void signUp() {

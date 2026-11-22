@@ -19,20 +19,13 @@ import main.java.model.Studio;
 import main.java.model.JadwalFilm;
 
 public class StudioTableController {
-    @FXML
-    private TextField kodeStudioField;
-    @FXML
-    private TextField nomorStudioField;
-    @FXML
-    private ComboBox<String> jenisStudioComboBox;
-    @FXML
-    private TextField hargaField;
-    @FXML
-    private ComboBox<Bioskop> bioskopComboBox;
-    @FXML
-    private TableView<Studio> studioTable;
-    @FXML
-    private TableColumn<Studio, String> bioskopColumn;
+    @FXML private TextField kodeStudioField;
+    @FXML private TextField nomorStudioField;
+    @FXML private ComboBox<String> jenisStudioComboBox;
+    @FXML private TextField hargaField;
+    @FXML private ComboBox<Bioskop> bioskopComboBox;
+    @FXML private TableView<Studio> studioTable;
+    @FXML private TableColumn<Studio, String> bioskopColumn;
 
     private final StudioDAO studioDAO = new StudioDAO();
     private final BioskopDAO bioskopDAO = new BioskopDAO();
@@ -125,6 +118,7 @@ public class StudioTableController {
             studioDAO.saveStudio(readFormFields());
             refreshTable();
             clearForm();
+            showAlert("Sukses", "Studio berhasil ditambahkan!");
         } catch (Exception e) {
             showError("Submit Error", e.getMessage());
         }
@@ -139,12 +133,14 @@ public class StudioTableController {
         }
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin mengupdate data?", ButtonType.YES,
                 ButtonType.NO);
+        confirm.getDialogPane().getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         confirm.showAndWait();
         if (confirm.getResult() == ButtonType.YES) {
             try {
                 studioDAO.updateStudio(readFormFields(), selected.getId());
                 refreshTable();
                 clearForm();
+                showAlert("Sukses", "Studio berhasil diupdate!");
             } catch (Exception e) {
                 showError("Update Error", e.getMessage());
             }
@@ -160,14 +156,16 @@ public class StudioTableController {
         }
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin menghapus data?", ButtonType.YES,
                 ButtonType.NO);
+                confirm.getDialogPane().getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         confirm.showAndWait();
         if (confirm.getResult() == ButtonType.YES) {
             try {
                 studioDAO.deleteStudio(selected.getId());
                 refreshTable();
                 clearForm();
+                showAlert("Sukses", "Studio berhasil dihapus!");
             } catch (Exception e) {
-                showError("Delete Error", e.getMessage());
+                showError("Delete Error", "Jadwal film terkait harap dihapus terlebih dahulu!");
             }
         }
     }
@@ -229,9 +227,11 @@ public class StudioTableController {
 
         VBox content = new VBox(10, teksAtas, jadwalTable);
         detail.getDialogPane().setContent(content);
+        detail.getDialogPane().getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         detail.showAndWait();
     }
 
+    @FXML
     private void clearForm() {
         kodeStudioField.clear();
         nomorStudioField.clear();
@@ -245,6 +245,8 @@ public class StudioTableController {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         alert.showAndWait();
     }
 
@@ -252,6 +254,8 @@ public class StudioTableController {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setContentText(message);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         alert.showAndWait();
     }
 }

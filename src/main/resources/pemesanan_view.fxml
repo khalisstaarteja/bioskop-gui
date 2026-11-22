@@ -7,62 +7,68 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="20.0" stylesheets="@@/main/resources/css/style.css" styleClass="root" 
-      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" 
+<VBox spacing="20.0" stylesheets="@/main/resources/css/style.css" styleClass="root"
+      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="main.java.controller.PemesananController">
    <padding>
       <Insets top="20" right="20" bottom="20" left="20"/>
    </padding>
    <children>
-      <Label text="Form Pemesanan Tiket Bioskop" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+      <Label text="Form Pemesanan Tiket Bioskop" styleClass="page-title"/>
 
-      <!-- Bagian Form Input Pemesanan -->
-      <VBox spacing="12.0" style="-fx-background-color: #ffffff; -fx-padding: 15; -fx-background-radius: 8; -fx-border-color: #dcdde1; -fx-border-radius: 8;">
+      <!-- Form pemesanan (2 kolom) -->
+      <VBox spacing="12.0" styleClass="form-card">
          <children>
-            <!-- PILIH BIOSKOP -->
-            <VBox spacing="5.0">
-               <Label text="Pilih Bioskop:" style="-fx-font-weight: bold;"/>
-               <ComboBox fx:id="bioskopComboBox" promptText="-- Pilih Bioskop Terlebih Dahulu --" prefWidth="400.0"/>
-            </VBox>
+            <GridPane hgap="20.0" vgap="14.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0"/>
+                  <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0"/>
+               </columnConstraints>
+               <children>
+                  <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                     <Label text="Pilih Bioskop:" styleClass="field-label"/>
+                     <ComboBox fx:id="bioskopComboBox" promptText="-- Pilih Bioskop Terlebih Dahulu --" maxWidth="Infinity"/>
+                  </VBox>
 
-            <!-- PILIH FILM -->
-            <VBox spacing="5.0">
-               <Label text="Pilih Film:" style="-fx-font-weight: bold;"/>
-               <ComboBox fx:id="filmComboBox" promptText="-- Pilih Film --" prefWidth="400.0"/>
-            </VBox>
+                  <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                     <Label text="Pilih Film:" styleClass="field-label"/>
+                     <ComboBox fx:id="filmComboBox" promptText="-- Pilih Film --" maxWidth="Infinity"/>
+                  </VBox>
 
-            <!-- PILIH JADWAL -->
-            <VBox spacing="5.0">
-               <Label text="Pilih Jadwal Tayang &amp; Studio:" style="-fx-font-weight: bold;"/>
-               <ComboBox fx:id="jadwalComboBox" promptText="-- Pilih Jadwal --" prefWidth="400.0"/>
-            </VBox>
+                  <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                     <Label text="Pilih Jadwal Tayang &amp; Studio:" styleClass="field-label"/>
+                     <ComboBox fx:id="jadwalComboBox" promptText="-- Pilih Jadwal --" maxWidth="Infinity"/>
+                  </VBox>
 
-            <!-- JUMLAH TIKET -->
-            <VBox spacing="5.0">
-               <Label text="Jumlah Tiket:" style="-fx-font-weight: bold;"/>
-               <TextField fx:id="jumlahTiketField" promptText="Masukkan jumlah tiket" prefWidth="400.0"/>
-            </VBox>
+                  <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <Label text="Jumlah Tiket:" styleClass="field-label"/>
+                     <TextField fx:id="jumlahTiketField" promptText="Masukkan jumlah tiket"/>
+                  </VBox>
 
-            <!-- METODE PEMBAYARAN -->
-            <VBox spacing="5.0">
-               <Label text="Metode Pembayaran:" style="-fx-font-weight: bold;"/>
-               <ComboBox fx:id="metodePembayaranComboBox" promptText="-- Pilih Metode Pembayaran --" prefWidth="400.0"/>
-            </VBox>
+                  <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                     <Label text="Metode Pembayaran:" styleClass="field-label"/>
+                     <ComboBox fx:id="metodePembayaranComboBox" promptText="-- Pilih Metode Pembayaran --" maxWidth="Infinity"/>
+                  </VBox>
 
-            <HBox spacing="10.0" alignment="CENTER_LEFT" style="-fx-padding: 10 0 0 0;">
-               <Button text="Pesan Tiket Sekarang" onAction="#handlePesanTiket" styleClass="button" style="-fx-background-color:rgb(0, 0, 0);"/>
-            </HBox>
+                  <HBox alignment="BOTTOM_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <Button text="Pesan Tiket Sekarang" onAction="#handlePesanTiket" styleClass="button-primary"/>
+                  </HBox>
+               </children>
+            </GridPane>
          </children>
       </VBox>
 
-      <!-- Bagian Riwayat / Tabel Pemesanan & Tombol Cetak -->
+      <!-- Riwayat / Tabel Pemesanan & Tombol Cetak -->
       <VBox spacing="10.0" VBox.vgrow="ALWAYS">
-         <Label text="Riwayat Pemesanan Anda" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
-         
-         <TableView fx:id="riwayatTable" prefHeight="200.0" VBox.vgrow="ALWAYS">
+         <Label text="Riwayat Pemesanan Anda" styleClass="section-title"/>
+
+         <TableView fx:id="riwayatTable" prefHeight="260.0" minHeight="200.0" VBox.vgrow="ALWAYS">
+           <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
            <columns>
              <TableColumn fx:id="filmColumn" text="Judul Film" prefWidth="200.0"/>
              <TableColumn fx:id="jadwalColumn" text="Jadwal Tayang" prefWidth="180.0"/>
@@ -72,7 +78,7 @@
          </TableView>
 
          <HBox alignment="CENTER_RIGHT">
-            <Button text="Cetak / Lihat Struk Tiket" onAction="#handleCetakTiket" styleClass="button" style="-fx-background-color:rgb(0, 0, 0);"/>
+            <Button text="Cetak / Lihat Struk Tiket" onAction="#handleCetakTiket" styleClass="button"/>
          </HBox>
       </VBox>
    </children>

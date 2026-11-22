@@ -1,6 +1,8 @@
 package main.java.controller;
 
 import java.sql.SQLException;
+import java.util.List;
+
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -12,14 +14,10 @@ import main.java.model.Bioskop;
 import main.java.model.Studio;
 
 public class BioskopTableController {
-    @FXML
-    private TextField kodeBioskopField;
-    @FXML
-    private TextField namaBioskopField;
-    @FXML
-    private TextField lokasiField;
-    @FXML
-    private TableView<Bioskop> bioskopTable;
+    @FXML private TextField kodeBioskopField;
+    @FXML private TextField namaBioskopField;
+    @FXML private TextField lokasiField;
+    @FXML private TableView<Bioskop> bioskopTable;
 
     private final BioskopDAO bioskopDAO = new BioskopDAO();
     private final StudioDAO studioDAO = new StudioDAO();
@@ -47,6 +45,7 @@ public class BioskopTableController {
         });
     }
 
+    // Baca input form
     private Bioskop readFormFields() {
         String kode = kodeBioskopField.getText().trim();
         String nama = namaBioskopField.getText().trim();
@@ -54,10 +53,11 @@ public class BioskopTableController {
         return new Bioskop(0, kode, nama, lokasi);
     }
 
+    // Submit
     @FXML
     private void handleSubmit() {
-        if (kodeBioskopField.getText().trim().isEmpty() || namaBioskopField.getText().trim().isEmpty()) {
-            showAlert("Warning", "Kode dan Nama Bioskop tidak boleh kosong!");
+        if (kodeBioskopField.getText().trim().isEmpty() || namaBioskopField.getText().trim().isEmpty() || lokasiField.getText().trim().isEmpty()) {
+            showAlert("Warning", "Seluruh data wajib diisi!");
             return;
         }
 
@@ -73,6 +73,7 @@ public class BioskopTableController {
             bioskopDAO.saveBioskop(readFormFields());
             refreshTable();
             clearForm();
+            showAlert("Sukses", "Bioskop berhasil ditambahkan!");
         } catch (Exception e) {
             showError("Submit Error", e.getMessage());
         }
@@ -87,14 +88,16 @@ public class BioskopTableController {
         }
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin mengupdate data?", ButtonType.YES,
                 ButtonType.NO);
+                confirm.getDialogPane().getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         confirm.showAndWait();
         if (confirm.getResult() == ButtonType.YES) {
             try {
                 bioskopDAO.updateBioskop(readFormFields(), selected.getId());
                 refreshTable();
                 clearForm();
+                showAlert("Sukses", "Bioskop berhasil diupdate!");
             } catch (Exception e) {
-                showError("Update Error", e.getMessage());
+                showError("Update Error", "Format angka salah!");
             }
         }
     }
@@ -108,14 +111,16 @@ public class BioskopTableController {
         }
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin menghapus data?", ButtonType.YES,
                 ButtonType.NO);
+                confirm.getDialogPane().getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         confirm.showAndWait();
         if (confirm.getResult() == ButtonType.YES) {
             try {
                 bioskopDAO.deleteBioskop(selected.getId());
                 refreshTable();
                 clearForm();
+                showAlert("Sukses", "Bioskop berhasil dihapus!");
             } catch (Exception e) {
-                showError("Delete Error", e.getMessage());
+                showError("Delete Error", "Studio terkait harus dihapus terlebih dahulu!");
             }
         }
     }
@@ -147,12 +152,17 @@ public class BioskopTableController {
         studioTable.setPrefSize(450, 250);
 
         try {
-            studioTable.setItems(FXCollections.observableArrayList(
-                    studioDAO.getStudioByBioskopId(selected.getId())));
+            List<Studio> studios = bioskopDAO.getBioskopWithStudio().stream()
+                    .filter(b -> b.getId() == selected.getId())
+                    .flatMap(b -> b.getListStudio().stream())
+                    .collect(java.util.stream.Collectors.toList());
+
+            studioTable.setItems(FXCollections.observableArrayList(studios));
         } catch (SQLException e) {
             showError("Database Error", e.getMessage());
             return;
         }
+
 
         Alert detail = new Alert(Alert.AlertType.INFORMATION);
         detail.setTitle("Bioskop Details");
@@ -162,9 +172,11 @@ public class BioskopTableController {
         teksAtas.setStyle("-fx-font-weight: bold;");
         VBox content = new VBox(10, teksAtas, studioTable);
         detail.getDialogPane().setContent(content);
+        detail.getDialogPane().getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         detail.showAndWait();
     }
 
+    @FXML
     private void clearForm() {
         kodeBioskopField.clear();
         namaBioskopField.clear();
@@ -176,6 +188,8 @@ public class BioskopTableController {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         alert.showAndWait();
     }
 
@@ -183,6 +197,8 @@ public class BioskopTableController {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setContentText(message);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         alert.showAndWait();
     }
 }

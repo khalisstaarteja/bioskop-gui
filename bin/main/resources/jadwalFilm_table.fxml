@@ -8,38 +8,47 @@
       fx:controller="main.java.controller.JadwalFilmTableController">
     <padding><Insets bottom="10.0" left="10.0" right="10.0" top="10.0" /></padding>
     <children>
-        <GridPane hgap="10.0" vgap="10.0">
+        <VBox styleClass="form-card">
             <children>
-                <Label text="Kode Jadwal:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                <TextField fx:id="kodeJadwalField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <GridPane hgap="15.0" vgap="12.0">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="110.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="35.0"/>
+                        <ColumnConstraints minWidth="110.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" percentWidth="35.0"/>
+                    </columnConstraints>
+                    <children>
+                        <Label text="Kode Jadwal:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <TextField fx:id="kodeJadwalField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <Label text="Tanggal:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                        <DatePicker fx:id="tanggalPicker" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="0" />
 
-                <Label text="Bioskop:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                <ComboBox fx:id="bioskopComboBox" promptText="Pilih Bioskop..." GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Bioskop:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="bioskopComboBox" promptText="Pilih Bioskop..." maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Jam (HH:mm):" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <TextField fx:id="jamField" promptText="14:30" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 
-                <Label text="Studio:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                <ComboBox fx:id="studioComboBox" promptText="Pilih Studio..." GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label text="Studio:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <ComboBox fx:id="studioComboBox" promptText="Pilih Studio..." maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label text="Kapasitas Kursi:" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <TextField fx:id="kapasitasField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
 
-                <Label text="Film:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                <ComboBox fx:id="filmComboBox" promptText="Pilih Film..." GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label text="Film:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <ComboBox fx:id="filmComboBox" promptText="Pilih Film..." maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-                <Label text="Tanggal:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                <DatePicker fx:id="tanggalPicker" GridPane.columnIndex="3" GridPane.rowIndex="0" />
-
-                <Label text="Jam (HH:mm):" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                <TextField fx:id="jamField" promptText="14:30" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-
-                <Label text="Kapasitas Kursi:" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                <TextField fx:id="kapasitasField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-
-                <HBox spacing="10.0" GridPane.columnIndex="3" GridPane.rowIndex="3">
-                    <Button onAction="#handleSubmit" text="Submit" />
-                    <Button onAction="#handleUpdate" text="Update" />
-                    <Button onAction="#handleDelete" text="Delete" />
-                </HBox>
+                        <HBox spacing="10.0" alignment="CENTER_RIGHT" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                            <Button onAction="#handleSubmit" styleClass="submit-btn" text="Submit" />
+                            <Button onAction="#handleUpdate" styleClass="update-btn" text="Update" />
+                            <Button onAction="#handleDelete" styleClass="delete-btn" text="Delete" />
+                            <Button onAction="#clearForm" styleClass="clear-btn" text="Clear" />
+                        </HBox>
+                    </children>
+                </GridPane>
             </children>
-        </GridPane>
-
+        </VBox>
+        
         <TableView fx:id="jadwalTable" VBox.vgrow="ALWAYS">
+            <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
             <columns>
                 <TableColumn text="Kode Jadwal"><cellValueFactory><PropertyValueFactory property="kodeJadwal" /></cellValueFactory></TableColumn>
                 <TableColumn fx:id="bioskopColumn" text="Bioskop" />

@@ -9,7 +9,6 @@ public class AdminDAO {
     // Ambil semua data admin beserta informasi akun usernya menggunakan JOIN
     public List<Admin> getAllAdmin() throws SQLException {
         List<Admin> adminList = new ArrayList<>();
-        // Asumsi ada relasi atau pencocokan nama antara tabel users dan admin
         String sql = "SELECT a.admin_id, a.username, u.id AS user_id, u.nama, u.password, u.role " +
                      "FROM admin a " +
                      "JOIN users u ON a.username = u.nama";

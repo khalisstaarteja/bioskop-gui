@@ -64,16 +64,6 @@ public class Pemesanan implements Tiket {
 
     @Override
     public void cetakTiket() {
-        System.out.println("\n========== TIKET PEMESANAN ==========");
-        System.out.println("Nomor Pemesanan     : " + getNomorPemesanan());
-        System.out.println("Film                : " + getJadwal().getFilm().getJudul());
-        System.out.println("Tanggal             : " + getJadwal().getTanggal());
-        System.out.println("Jam Tayang          : " + getJadwal().getJam());
-        System.out.println("Bioskop             : " + getJadwal().getStudio().getBioskop().getNamaBioskop());
-        System.out.println("Studio              : " + getJadwal().getStudio().getNomorStudio());
-        System.out.println("Jumlah Tiket        : " + getJumlahPemesanan());
-        System.out.println("Metode Bayar        : " + getMetodePembayaran());
-        System.out.println("Total Bayar         : Rp " + String.format("%.0f", getTotalBayar()));
-        System.out.println("=====================================");
+    
     }
 }

@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class AdminDashboardContentController {
-
     @FXML private Label totalPendapatanLabel;
     @FXML private Label totalTiketLabel;
     @FXML private Label totalFilmLabel;
@@ -72,7 +71,7 @@ public class AdminDashboardContentController {
     private void loadRecentMovies() {
         try {
             // Hanya ambil film yang punya jadwal aktif
-            latestFilms = filmDAO.getFilmWithJadwal(); 
+            latestFilms = filmDAO.getAllFilm(); 
             if (latestFilms != null && !latestFilms.isEmpty()) {
                 currentIndex = 0;
                 displayMovie(currentIndex);
@@ -86,6 +85,7 @@ public class AdminDashboardContentController {
         }
     }
 
+    // Menampilkan film yang baru ditambahkan
     private void displayMovie(int index) {
         if (latestFilms == null || latestFilms.isEmpty()) return;
         
@@ -110,6 +110,7 @@ public class AdminDashboardContentController {
         }
     }
 
+    // Carousel panah
     @FXML
     private void handleNextMovie() {
         if (latestFilms == null || latestFilms.isEmpty()) return;

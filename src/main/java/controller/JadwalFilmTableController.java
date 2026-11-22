@@ -223,7 +223,15 @@ public class JadwalFilmTableController {
             return;
         }
 
+        int kapasitasBaru = Integer.parseInt(kapasitasField.getText().trim());
+        if (kapasitasBaru < selected.getKursiTerisi()) {
+            showAlert("Warning", "Kapasitas baru (" + kapasitasBaru + ") tidak boleh lebih kecil dari kursi yang sudah terisi (" + selected.getKursiTerisi() + ")!");
+            return;
+        }
+
+
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin mengupdate jadwal?", ButtonType.YES, ButtonType.NO);
+        confirm.getDialogPane().getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         confirm.showAndWait();
         if (confirm.getResult() == ButtonType.YES) {
             try {
@@ -253,18 +261,21 @@ public class JadwalFilmTableController {
             return;
         }
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin menghapus jadwal?", ButtonType.YES, ButtonType.NO);
+        confirm.getDialogPane().getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         confirm.showAndWait();
         if (confirm.getResult() == ButtonType.YES) {
             try {
                 jadwalDAO.deleteJadwalFilm(selected.getId());
                 refreshTable();
                 clearForm();
+                showAlert("Sukses", "Jadwal Film berhasil dihapus!");
             } catch (Exception e) {
-                showError("Delete Error", e.getMessage());
+                showError("Delete Error", "Jadwal ini sudah memiliki pesanan!");
             }
         }
     }
 
+    @FXML
     private void clearForm() {
         kodeJadwalField.clear();
         bioskopComboBox.setValue(null);
@@ -280,6 +291,8 @@ public class JadwalFilmTableController {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         alert.showAndWait();
     }
 
@@ -287,6 +300,8 @@ public class JadwalFilmTableController {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setContentText(message);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         alert.showAndWait();
     }
 }

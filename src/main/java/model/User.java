@@ -11,16 +11,8 @@ public abstract class User {
     private final StringProperty password = new SimpleStringProperty();
     private final StringProperty role = new SimpleStringProperty();
 
-    // Constructor 1: Lengkap dari Database / TableView
     public User(int id, String nama, String password, String role) {
         this.id.set(id);
-        this.nama.set(nama);
-        this.password.set(password);
-        this.role.set(role);
-    }
-
-    // Constructor 2: Tanpa ID (untuk data baru sebelum disimpan ke DB)
-    public User(String nama, String password, String role) {
         this.nama.set(nama);
         this.password.set(password);
         this.role.set(role);

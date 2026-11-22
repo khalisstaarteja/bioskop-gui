@@ -26,7 +26,7 @@ public class PemesananAdminController {
     @FXML
     public void initialize() {
         idColumn.setCellValueFactory(c ->
-            new SimpleStringProperty("INV-" + c.getValue().getNomorPemesanan()));
+            new SimpleStringProperty(String.valueOf(c.getValue().getNomorPemesanan())));
         pelangganColumn.setCellValueFactory(c ->
             new SimpleStringProperty(c.getValue().getUser().getNama()));
         filmColumn.setCellValueFactory(c ->
@@ -40,11 +40,6 @@ public class PemesananAdminController {
         metodeColumn.setCellValueFactory(c ->
             new SimpleStringProperty(c.getValue().getMetodePembayaran()));
 
-        loadData();
-    }
-
-    @FXML
-    private void handleRefresh() {
         loadData();
     }
 

@@ -137,8 +137,14 @@ public class PemesananController {
     }
 
     private void loadRiwayat() {
+        if (currentUser == null) return;
         try {
-            List<Pemesanan> list = pemesananDAO.getPemesananByUserId(currentUser.getId());
+            List<Pemesanan> list = new main.java.database.PelangganDAO().getAllPelangganWithPemesanan().stream()
+                    .filter(p -> p.getId() == currentUser.getId())
+                    .findFirst()
+                    .map(p -> (List<Pemesanan>) p.getListPemesanan())
+                    .orElse(List.of());
+    
             if (riwayatTable != null) {
                 riwayatTable.setItems(FXCollections.observableArrayList(list));
             }
@@ -146,8 +152,9 @@ public class PemesananController {
             e.printStackTrace();
         }
     }
+    
 
-    // Aksi saat Pelanggan menekan tombol "Pesan Tiket"
+    // Aksi saat pelanggan menekan tombol "Pesan Tiket"
     @FXML
     private void handlePesanTiket() {
         Bioskop bioskop = bioskopComboBox != null ? bioskopComboBox.getValue() : null;
@@ -192,6 +199,7 @@ public class PemesananController {
             Alert tanya = new Alert(Alert.AlertType.CONFIRMATION,
                     "Tiket berhasil dipesan! Cetak tiket sekarang?", ButtonType.YES, ButtonType.NO);
             tanya.setTitle("Sukses");
+            tanya.getDialogPane().getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
             tanya.setHeaderText(null);
             tanya.showAndWait();
             if (tanya.getResult() == ButtonType.YES) {
@@ -219,13 +227,13 @@ public class PemesananController {
     private void tampilkanTiket(Pemesanan p) {
         try {
             p.cetakTiket();
-    
+
             String htmlContent = bacaResource("/main/resources/tiket.html");
-            String css = bacaResource("/main/resources/css/style.css");
-    
+            String css = bacaResource("/main/resources/css/tiket.css");
+
             String tanggalSekarang = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm"));
             String totalFormatted = String.format("%,.0f", p.getTotalBayar());
-    
+
             String itemRows =
                 baris("Bioskop", p.getJadwal().getStudio().getBioskop().getNamaBioskop()) +
                 baris("Film", p.getJadwal().getFilm().getJudul()) +
@@ -234,21 +242,50 @@ public class PemesananController {
                 baris("Jumlah", p.getJumlahPemesanan() + " Tiket") +
                 baris("Pembayaran", p.getMetodePembayaran()) +
                 "<tr class=\"total\"><td class=\"k\">Total</td><td class=\"v\">Rp " + totalFormatted + "</td></tr>";
-    
-                htmlContent = htmlContent.replace("<!--CSS-->", "<style>" + css + "</style>")
-                    .replace("{{tiketNumber}}", "INV-" + p.getNomorPemesanan())
-                    .replace("{{date}}", tanggalSekarang)
-                    .replace("{{customerName}}", currentUser.getNama())
-                    .replace("{{sellerName}}", "Bioskop Sistem Admin")
-                    .replace("{{itemRows}}", itemRows);
-    
+
+            htmlContent = htmlContent.replace("<!--CSS-->", "<style>" + css + "</style>")
+                .replace("{{tiketNumber}}", String.valueOf(p.getNomorPemesanan()))
+                .replace("{{date}}", tanggalSekarang)
+                .replace("{{customerName}}", currentUser.getNama())
+                .replace("{{sellerName}}", "Bioskop Sistem Admin")
+                .replace("{{itemRows}}", itemRows);
+
             WebView webView = new WebView();
+            webView.setPrefSize(560, 560);
             webView.getEngine().loadContent(htmlContent);
-    
-            Stage stage = new Stage();
-            stage.setTitle("Tiket - " + p.getJadwal().getFilm().getJudul());
-            stage.setScene(new Scene(webView, 580, 620));
-            stage.show();
+
+            Dialog<Void> dialog = new Dialog<>();
+            dialog.setTitle("Tiket - " + p.getJadwal().getFilm().getJudul());
+
+            DialogPane dialogPane = dialog.getDialogPane();
+            dialogPane.getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
+            dialogPane.setContent(webView);
+
+            ButtonType btnPdfType = new ButtonType("Download / Print PDF", ButtonBar.ButtonData.LEFT);
+            dialogPane.getButtonTypes().addAll(btnPdfType, ButtonType.CLOSE);
+
+            Button btnPdf = (Button) dialogPane.lookupButton(btnPdfType);
+            btnPdf.addEventFilter(javafx.event.ActionEvent.ACTION, e -> {
+                e.consume();
+                javafx.print.PrinterJob job = javafx.print.PrinterJob.createPrinterJob();
+                if (job != null) {
+                    for (javafx.print.Printer printer : javafx.print.Printer.getAllPrinters()) {
+                        if (printer.getName().toLowerCase().contains("pdf")) {
+                            job.setPrinter(printer);
+                            break;
+                        }
+                    }
+                    if (job.showPrintDialog(dialogPane.getScene().getWindow())) {
+                        webView.getEngine().print(job);
+                        job.endJob();
+                        showAlert("Sukses", "Struk tiket berhasil diproses ke PDF!");
+                    }
+                } else {
+                    showAlert("Error", "Layanan cetak PDF tidak ditemukan di sistem ini.");
+                }
+            });
+
+            dialog.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
             showAlert("Error", "Gagal merender template tiket: " + e.getMessage());
@@ -269,6 +306,7 @@ public class PemesananController {
         }
     }
 
+    @FXML
     private void clearForm() {
         if (bioskopComboBox != null) bioskopComboBox.setValue(null);
         if (filmComboBox != null) filmComboBox.setValue(null);
@@ -282,6 +320,8 @@ public class PemesananController {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         alert.showAndWait();
     }
 
@@ -306,6 +346,16 @@ public class PemesananController {
             for (Film f : filmComboBox.getItems()) {
                 if (f.getId() == targetFilm.getId()) {
                     filmComboBox.setValue(f);
+                    break;
+                }
+            }
+        }
+
+        // pilih jadwal yg cocok berdasarkan id
+        if (jadwalComboBox != null) {
+            for (JadwalFilm j : jadwalComboBox.getItems()) {
+                if (j.getId() == jadwal.getId()) {
+                    jadwalComboBox.setValue(j);
                     break;
                 }
             }

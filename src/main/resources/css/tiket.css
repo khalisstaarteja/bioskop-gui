@@ -1,0 +1,134 @@
+@font-face {
+    font-family: 'Bricolage Grotesque';
+    src: url('../fonts/BricolageGrotesque-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Bricolage Grotesque';
+    font-weight: bold;
+    src: url('../fonts/BricolageGrotesque-Bold.ttf');
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+}
+
+@media print {
+    body.tiket {
+        background: #ffffff !important;
+        padding: 0;
+    }
+    .invoice-box {
+        box-shadow: none;
+        border: 1px solid #e2d9f3;
+    }
+    .header {
+        background: #6b21a8 !important;
+        background: linear-gradient(135deg, #4c1d95, #8b3dea) !important;
+        color: #ffffff !important;
+    }
+    table.items tr.total td {
+        background: #f6f0fd !important;
+        color: #4c1d95 !important;
+    }
+}
+
+body.tiket {
+    font-family: 'Bricolage Grotesque', 'Segoe UI', Arial, sans-serif;
+    background: #ffffff;
+    margin: 0;
+    padding: 24px;
+    color: #2a1650;
+}
+
+.invoice-box {
+    max-width: 520px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+}
+
+.header {
+    background: linear-gradient(135deg, #4c1d95, #8b3dea);
+    color: #fff;
+    padding: 22px 26px;
+}
+
+.title {
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 3px;
+}
+
+.subtitle {
+    font-size: 12px;
+    opacity: 0.75;
+    margin-top: 4px;
+}
+
+.meta {
+    display: table;
+    width: 100%;
+    padding: 18px 26px;
+    border-bottom: 1px dashed #cfd6dd;
+    font-size: 13px;
+}
+
+.meta > div {
+    display: table-cell;
+    width: 50%;
+    vertical-align: top;
+}
+
+.meta .label {
+    color: #7f8c8d;
+    font-size: 11px;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+}
+
+.meta .value {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+table.items {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table.items td {
+    padding: 10px 26px;
+    font-size: 13px;
+    border-bottom: 1px solid #f0f2f4;
+}
+
+table.items td.k {
+    color: #7f8c8d;
+    width: 38%;
+}
+
+table.items td.v {
+    font-weight: 600;
+    text-align: right;
+}
+
+table.items tr.total td {
+    background: #f6f0fd;
+    font-size: 16px;
+    color: #4c1d95;
+    font-weight: bold;
+    border-bottom: none;
+}
+
+.footer {
+    text-align: center;
+    font-size: 11px;
+    color: #95a5a6;
+    padding: 14px;
+}

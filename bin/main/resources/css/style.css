@@ -1,217 +1,111 @@
-* { 
-    box-sizing: border-box; 
-}
-body.tiket {
-  font-family: 'Segoe UI', Arial, sans-serif;
-  background: #fff9ab;
-  margin: 0;
-  padding: 24px;
-  color: #000000;
+@font-face {
+    font-family: 'Bricolage Grotesque';
+    src: url('../fonts/BricolageGrotesque-Regular.ttf');
 }
 
-.invoice-box {
-  max-width: 520px;
-  margin: 0 auto;
-  background: #fff;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
-}
-
-.header { 
-    background: #000000; 
-    color: #fff; 
-    padding: 22px 26px; 
-}
-
-.title { 
-    font-size: 22px; 
-    font-weight: bold; 
-    letter-spacing: 3px; 
-}
-
-.subtitle { 
-    font-size: 12px; 
-    opacity: 0.75; 
-    margin-top: 4px; 
-}
-
-.meta {
-  display: table;
-  width: 100%;
-  padding: 18px 26px;
-  border-bottom: 1px dashed #cfd6dd;
-  font-size: 13px;
-}
-
-.meta > div { 
-    display: table-cell; 
-    width: 50%; 
-    vertical-align: top; 
-}
-
-.meta .label { 
-    color: #7f8c8d; 
-    font-size: 11px; 
-    text-transform: uppercase; 
-    margin-bottom: 3px; 
-}
-
-.meta .value { 
-    display: block;
-    font-weight: 600; 
-    font-size: 14px; 
-}
-
-table.items { 
-    width: 100%; 
-    border-collapse: collapse; 
-}
-
-table.items td { 
-    padding: 10px 26px; 
-    font-size: 13px; 
-    border-bottom: 1px solid #f0f2f4; 
-
-}
-table.items td.k { 
-    color: #7f8c8d; 
-    width: 38%; 
-}
-table.items td.v { 
-    font-weight: 600; 
-    text-align: right; 
-}
-
-table.items tr.total td {
-  background: #f6f8fa;
-  font-size: 16px;
-  color: #0066ff;
-  font-weight: bold;
-  border-bottom: none;
-}
-.footer { 
-    text-align: center; 
-    font-size: 11px; 
-    color: #95a5a6; padding: 14px; 
+@font-face {
+    font-family: 'Bricolage Grotesque';
+    font-weight: bold;
+    src: url('../fonts/BricolageGrotesque-Bold.ttf');
 }
 
 .root, .root-pane {
-    -fx-font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    -fx-background-color: #ecf0f1;
+    -fx-font-family: 'Bricolage Grotesque';
+    -fx-font-smoothing-type: gray;
+    -fx-background-color: linear-gradient(to bottom right, #f5eefe, #e9d8fd);
 }
 
-/* Tombol Umum */
+
+
+.root, .root-pane {
+    -fx-font-family: 'Bricolage Grotesque';
+    -fx-background-color: linear-gradient(to bottom right, #f5eefe, #e9d8fd);
+}
+
 .button {
-    -fx-background-color: #000000;
+    -fx-background-color: linear-gradient(to right, #4c1d95, #8b3dea);
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-cursor: hand;
     -fx-padding: 8 15;
-    -fx-border-radius: 4;
     -fx-background-radius: 4;
 }
 
 .button:hover {
-    -fx-background-color: #000000;
+    -fx-background-color: linear-gradient(to right, #5b21b6, #a855f7);
 }
 
-/* Sidebar Kiri */
+/* Sidebar kiri */
 .sidebar {
-    -fx-background-color: #000000;
+    -fx-background-color: linear-gradient(to bottom, #2e0a5c, #6d28d9);
     -fx-padding: 15;
 }
 
-.user-label {
+.sidebar .user-label {
     -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-font-size: 13px;
 }
 
-.menu-section {
-    -fx-border-color: #000000;
-    -fx-border-width: 1 0 0 0;
-    -fx-padding: 10 0 0 0;
+.sidebar .menu-header {
+    -fx-text-fill: #e4d6fb;
 }
 
 .menu-header {
-    -fx-text-fill: #bdc3c7;
+    -fx-text-fill: #e4d6fb;
     -fx-font-size: 10px;
     -fx-font-weight: bold;
 }
 
-/* Tombol Navigasi Sidebar */
+/* Tombol navigasi sidebar */
 .menu-button {
-    -fx-background-color: #2d2d2d;
+    -fx-background-color: rgba(255,255,255,0.12);
     -fx-text-fill: white;
     -fx-alignment: CENTER_LEFT;
     -fx-padding: 8 12;
     -fx-cursor: hand;
 }
+
 .menu-button:hover {
-    -fx-background-color: #3e5871;
+    -fx-background-color: rgba(255,255,255,0.25);
 }
 
-/* Tombol Pemesanan */
 .menu-button-primary {
-    -fx-background-color: #000000;
+    -fx-background-color: rgba(255,255,255,0.12);
     -fx-text-fill: white;
     -fx-alignment: CENTER_LEFT;
     -fx-padding: 8 12;
     -fx-cursor: hand;
     -fx-font-weight: bold;
 }
+
 .menu-button-primary:hover {
-    -fx-background-color: #3498db;
+    -fx-background-color: rgba(255,255,255,0.25);
 }
 
-/* Tombol Riwayat */
 .menu-button-success {
-    -fx-background-color: #000000;
+    -fx-background-color: rgba(255,255,255,0.12);
     -fx-text-fill: white;
     -fx-alignment: CENTER_LEFT;
     -fx-padding: 8 12;
     -fx-cursor: hand;
     -fx-font-weight: bold;
 }
+
 .menu-button-success:hover {
-    -fx-background-color: #000000;
+    -fx-background-color: rgba(255,255,255,0.25);
 }
 
-/* Tombol Logout (Merah) */
+/* logout */
 .logout-button {
-    -fx-background-color: #3e0000;
+    -fx-background-color: linear-gradient(to right, #951d8f, #ea3dc5);
     -fx-text-fill: white;
     -fx-alignment: CENTER;
     -fx-padding: 8 12;
     -fx-cursor: hand;
     -fx-font-weight: bold;
 }
+
 .logout-button:hover {
-    -fx-background-color: #000000;
-}
-
-/* Area Tab Kanan */
-.main-tab-pane {
-    -fx-background-color: #ecf0f1;
-}
-
-/* Tabel View */
-.table-view {
-    -fx-base: #ffffff;
-    -fx-control-inner-background: #ffffff;
-    -fx-background-color: #ffffff;
-    -fx-table-cell-border-color: #dfe6e9;
-}
-
-.table-view .column-header {
-    -fx-background-color: #000000;
-    -fx-text-fill: white;
-}
-
-.table-view .column-header-background .label {
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
+    -fx-background-color: #54006b;
 }
 
 .sidebar-button {
@@ -225,21 +119,109 @@ table.items tr.total td {
 }
 
 .sidebar-button:hover {
-    -fx-background-color: #000000;
+    -fx-background-color: rgba(255,255,255,0.2);
     -fx-text-fill: #ffffff;
+}
+
+.main-tab-pane {
+    -fx-background-color: transparent;
+}
+
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10;
+    -fx-border-color: #dccff2;
+    -fx-border-radius: 10;
+    -fx-padding: 0;
+    -fx-effect: dropshadow(gaussian, rgba(76,29,149,0.15), 12, 0, 0, 3);
+}
+
+.table-view:focused {
+    -fx-background-insets: 0;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to right, #4c1d95, #8b3dea);
+    -fx-background-radius: 10 10 0 0;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-size: 44;
+}
+
+.table-view .column-header .label {
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 0 8;
+}
+
+.table-row-cell {
+    -fx-cell-size: 42px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #f0e8fb transparent;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #faf6ff;
+}
+
+.table-row-cell:empty {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.table-cell {
+    -fx-padding: 0 14;
+    -fx-alignment: CENTER_LEFT;
+    -fx-border-color: transparent;
+}
+
+.table-row-cell:filled:hover {
+    -fx-background-color: #f1e8fd;
+}
+
+.table-row-cell:filled:selected {
+    -fx-background-color: #8b3dea;
+}
+
+.table-row-cell:filled:selected:hover {
+    -fx-background-color: #7c2fd6;
+}
+
+/* Teks table kosong */
+.table-view .placeholder .label {
+    -fx-text-fill: #8a74b3;
+    -fx-font-size: 14px;
+}
+
+.table-view .column-header .label, .table-view .column-header-background .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
 }
 
 .page-title {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
-    -fx-text-fill: #2c3e50;
+    -fx-text-fill: #2a1650;
+}
+
+.login-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2a1650;
+}
+
+.subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #5f4a86;
 }
 
 .search-box {
     -fx-background-color: #ffffff;
     -fx-padding: 12;
     -fx-background-radius: 8;
-    -fx-border-color: #dcdde1;
+    -fx-border-color: #dccff2;
     -fx-border-radius: 8;
 }
 
@@ -247,7 +229,7 @@ table.items tr.total td {
     -fx-padding: 8 12;
     -fx-font-size: 13px;
     -fx-background-radius: 5;
-    -fx-border-color: #bdc3c7;
+    -fx-border-color: #c9b5ec;
     -fx-border-radius: 5;
 }
 
@@ -255,50 +237,49 @@ table.items tr.total td {
     -fx-background-color: #ffffff;
     -fx-padding: 15;
     -fx-background-radius: 8;
-    -fx-border-color: #dcdde1;
+    -fx-border-color: #dccff2;
     -fx-border-radius: 8;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.60), 6, 0, 0, 2);
+    -fx-effect: dropshadow(three-pass-box, rgba(76,29,149,0.35), 6, 0, 0, 2);
 }
 
 .film-card:hover {
-    -fx-border-color: #000000;
+    -fx-border-color: #8b3dea;
 }
 
 .film-card-meta {
     -fx-font-size: 13px;
-    -fx-text-fill: #576574;
+    -fx-text-fill: #5f4a86;
 }
 
 .film-card-title {
     -fx-font-size: 19px;
     -fx-font-weight: bold;
-    -fx-font-fill: #000000;
+    -fx-text-fill: #2a1650;
 }
 
 .film-detail-header {
     -fx-background-color: #ffffff;
     -fx-padding: 18;
     -fx-background-radius: 8;
-    -fx-border-color: #dcdde1;
+    -fx-border-color: #dccff2;
     -fx-border-radius: 8;
 }
 
 .bioskop-card-title {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-text-fill: #000000;
+    -fx-text-fill: #2a1650;
 }
 
 .studio-badge {
     -fx-font-size: 13px;
     -fx-font-weight: bold;
-    -fx-text-fill: #0052cc;
-    -fx-background-color: #e8f1ff;
+    -fx-text-fill: #4c1d95;
+    -fx-background-color: #ede3fb;
     -fx-padding: 3 9;
     -fx-background-radius: 5;
 }
 
-/* Status Kursi */
 .status-available {
     -fx-background-color: #27ae60;
     -fx-text-fill: white;
@@ -318,7 +299,7 @@ table.items tr.total td {
 }
 
 .btn-pesan-jadwal {
-    -fx-background-color: #000000;
+    -fx-background-color: linear-gradient(to right, #4c1d95, #8b3dea);
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-padding: 6 14;
@@ -327,7 +308,7 @@ table.items tr.total td {
 }
 
 .btn-pesan-jadwal:hover {
-    -fx-background-color: #2c3e50;
+    -fx-background-color: linear-gradient(to right, #5b21b6, #a855f7);
 }
 
 .btn-secondary {
@@ -337,4 +318,278 @@ table.items tr.total td {
     -fx-padding: 7 14;
     -fx-background-radius: 5;
     -fx-cursor: hand;
+}
+
+.submit-btn {
+    -fx-background-color: #2e7d4c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 7 14;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.update-btn {
+    -fx-background-color: #d4c40b;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 7 14;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.delete-btn {
+    -fx-background-color: #7d2e39;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 7 14;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.clear-btn {
+    -fx-background-color: #782ec2;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 7 14;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.login-container {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(76,29,149,0.25), 30, 0, 0, 10);
+}
+
+.login-container .label {
+    -fx-text-fill: #2a1650;
+    -fx-font-weight: bold;
+}
+
+.login-container .login-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2a1650;
+}
+
+.button-primary {
+    -fx-background-color: linear-gradient(to right, #4c1d95, #8b3dea);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 12 15;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.button-primary:hover {
+    -fx-background-color: linear-gradient(to right, #5b21b6, #a855f7);
+}
+
+.hyperlink {
+    -fx-text-fill: #6d28d9;
+}
+
+/* Input */
+.label {
+    -fx-text-fill: #2a1650;
+}
+
+.text-field, .password-field {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 8;
+    -fx-border-color: #c9b5ec;
+    -fx-border-radius: 8;
+    -fx-padding: 9 12;
+    -fx-text-fill: #2a1650;
+}
+
+.text-field:focused, .password-field:focused, .combo-box:focused {
+    -fx-border-color: #8b3dea;
+}
+
+.text-field:disabled {
+    -fx-background-color: #efe8fb;
+    -fx-opacity: 1;
+}
+
+.combo-box {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 8;
+    -fx-border-color: #c9b5ec;
+    -fx-border-radius: 8;
+    -fx-padding: 3 4;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #2a1650;
+}
+
+.combo-box-popup .list-view .list-cell:filled:hover,
+.combo-box-popup .list-view .list-cell:filled:selected {
+    -fx-background-color: #8b3dea;
+    -fx-text-fill: white;
+}
+
+.tab-pane > .tab-header-area > .tab-header-background {
+    -fx-background-color: transparent;
+}
+
+.tab-pane > .tab-content-area {
+    -fx-background-color: transparent;
+}
+
+.tab {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 6 6 0 0;
+    -fx-background-insets: 0;
+}
+
+.tab .tab-label {
+    -fx-text-fill: #4c1d95;
+    -fx-font-weight: bold;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab:selected {
+    -fx-background-color: #ffffff;
+}
+
+.table-cell {
+    -fx-text-fill: #2a1650;
+}
+
+.table-row-cell:filled:hover {
+    -fx-background-color: #f1e8fd;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #8b3dea;
+}
+
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: white;
+}
+
+.table-row-cell:filled:selected:hover {
+    -fx-background-color: #8b3dea;
+}
+
+.menu-button.active {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #2e0a5c;
+    -fx-font-weight: bold;
+}
+
+.card {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20;
+    -fx-background-radius: 12;
+}
+
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2a1650;
+}
+
+.carousel-btn {
+    -fx-background-color: linear-gradient(to right, #4c1d95, #8b3dea);
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-pref-width: 45px;
+    -fx-pref-height: 45px;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+.carousel-btn:hover {
+    -fx-background-color: linear-gradient(to right, #5b21b6, #a855f7);
+}
+
+.poster {
+    -fx-background-color: linear-gradient(to bottom, #3b0f73, #a855f7);
+    -fx-background-radius: 4;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.25), 8, 0, 0, 4);
+}
+
+.stat-card {
+    -fx-background-color: linear-gradient(to bottom, #4c1d95, #8b3dea);
+    -fx-padding: 18;
+    -fx-background-radius: 10;
+}
+
+.stat-title {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+}
+
+.stat-value {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.form-card {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20;
+    -fx-background-radius: 12;
+}
+
+.field-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #2a1650;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.date-picker {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 8;
+    -fx-border-color: #c9b5ec;
+    -fx-border-radius: 8;
+    -fx-padding: 3 4;
+}
+
+.date-picker .text-field {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 6 8;
+}
+
+.date-picker-popup .button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #4c1d95;
+}
+
+.date-picker-popup .day-cell:selected {
+    -fx-background-color: #8b3dea;
+    -fx-text-fill: white;
+}
+
+.poster-small {
+    -fx-background-color: linear-gradient(to bottom, #3b0f73, #a855f7);
+    -fx-background-radius: 4;
+}
+
+.dialog-pane {
+    -fx-font-family: 'Bricolage Grotesque';
+    -fx-background-color: linear-gradient(to bottom right, #f5eefe, #e9d8fd);
+}
+
+.dialog-pane > .header-panel {
+    -fx-background-color: linear-gradient(to right, #4c1d95, #8b3dea);
+}
+
+.dialog-pane > .header-panel .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
 }

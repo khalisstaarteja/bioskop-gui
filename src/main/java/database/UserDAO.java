@@ -49,12 +49,12 @@ public class UserDAO {
 
                     if ("Admin".equalsIgnoreCase(userRole)) {
                         String username = rs.getString("username");
-                        Admin admin = new Admin(nama, hash, username);
+                        Admin admin = new Admin(id, nama, hash, "Admin", id, username);
                         admin.setId(id);
                         return admin;
                     } else if ("Pelanggan".equalsIgnoreCase(userRole)) {
                         String email = rs.getString("email");
-                        Pelanggan pelanggan = new Pelanggan(nama, email, hash, userRole);
+                        Pelanggan pelanggan = new Pelanggan(id, nama, hash, "Pelanggan", id, email);
                         pelanggan.setId(id);
                         return pelanggan;
                     }
@@ -94,7 +94,7 @@ public class UserDAO {
                             }
                         }
                     }
-                    user = new Admin(nama, password, username);
+                    user = new Admin(id, nama, password, "Admin", id, username);
                 }
                 else if ("Pelanggan".equalsIgnoreCase(role)) {
                     String email = "";
@@ -109,7 +109,7 @@ public class UserDAO {
                             }
                         }
                     }
-                    user = new Pelanggan(nama, email, password, role);
+                    user = new Pelanggan(id, nama, password, role, id, email);
                 }
                 else {
                     continue;
@@ -234,13 +234,35 @@ public class UserDAO {
 
     // Hapus data user berdasarkan ID
     public void deleteUser(int id) throws SQLException {
-        String sql = "DELETE FROM users WHERE id = ?";
+        String sqlAdmin = "DELETE FROM admin WHERE admin_id = ?";
+        String sqlPelanggan = "DELETE FROM pelanggan WHERE pelanggan_id = ?";
+        String sqlUser = "DELETE FROM users WHERE id = ?";
 
-        try (Connection conn = PostgreSQLConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = PostgreSQLConnection.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                // Hapus dari tabel anak terlebih dahulu
+                try (PreparedStatement psAdmin = conn.prepareStatement(sqlAdmin)) {
+                    psAdmin.setInt(1, id);
+                    psAdmin.executeUpdate();
+                }
+                try (PreparedStatement psPelanggan = conn.prepareStatement(sqlPelanggan)) {
+                    psPelanggan.setInt(1, id);
+                    psPelanggan.executeUpdate();
+                }
 
-            pstmt.setInt(1, id);
-            pstmt.executeUpdate();
+                // Baru hapus dari tabel induk users
+                try (PreparedStatement psUser = conn.prepareStatement(sqlUser)) {
+                    psUser.setInt(1, id);
+                    psUser.executeUpdate();
+                }
+
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw e;
+            }
         }
     }
+
 }
