@@ -26,12 +26,12 @@ public class Pelanggan extends User implements Login {
 
     @Override
     public void signUp() {
-        System.out.println("\n[Pelanggan berhasil mendaftar!, Silahkan login kembali.]");
+       
     }
 
     @Override
     public void signIn() {
-        System.out.println("\n[Pelanggan berhasil masuk!]");
+        
     }
 
     // Memasukkan satu object Pemesanan ke dalam daftar pemesanan milik object ini
