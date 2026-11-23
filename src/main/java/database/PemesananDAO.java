@@ -49,6 +49,9 @@ public class PemesananDAO {
                 ) {
                     @Override
                     public String showMenu() { return null; }
+
+                    @Override
+                    public boolean validate() { return true; }
                 };
 
                 // Rekonstruksi objek Bioskop
@@ -136,6 +139,9 @@ public class PemesananDAO {
                     ) {
                         @Override
                         public String showMenu() { return null; }
+
+                        @Override
+                        public boolean validate() { return true; }
                     };
 
                     Bioskop bioskop = new Bioskop(

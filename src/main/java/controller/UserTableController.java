@@ -21,12 +21,18 @@ import main.java.model.Pemesanan;
 import main.java.model.User;
 
 public class UserTableController {
-    @FXML private TextField namaField;
-    @FXML private PasswordField passwordField;
-    @FXML private ComboBox<String> roleComboBox;
-    @FXML private VBox dynamicFormContainer;
-    @FXML private TableView<User> userTable;
-    @FXML private TableColumn<User, String> extraColumn;
+    @FXML
+    private TextField namaField;
+    @FXML
+    private PasswordField passwordField;
+    @FXML
+    private ComboBox<String> roleComboBox;
+    @FXML
+    private VBox dynamicFormContainer;
+    @FXML
+    private TableView<User> userTable;
+    @FXML
+    private TableColumn<User, String> extraColumn;
 
     // Field dinamis yang dimasukkan ke dalam dynamicFormContainer
     private TextField usernameField;
@@ -38,6 +44,11 @@ public class UserTableController {
     private final AdminDAO adminDAO = new AdminDAO();
     private final PelangganDAO pelangganDAO = new PelangganDAO();
     private final PemesananDAO pemesananDAO = new PemesananDAO();
+    private User currentUser;
+
+    public void initUser(User user) {
+        this.currentUser = user;
+    }
 
     private void refreshTable() {
         try {
@@ -113,6 +124,14 @@ public class UserTableController {
         dynamicFormContainer.setManaged(true);
     }
 
+    private String pesanValidasi(String role) {
+        String detail = "Admin".equals(role)
+                ? "Username 4-20 karakter, diawali huruf, hanya huruf/angka/titik/underscore."
+                : "Email harus berformat benar (contoh: nama@email.com).";
+        return detail + "\n\nPassword 8-20 karakter, mengandung angka, huruf kecil, huruf besar, "
+                + "1 karakter spesial (!@#$%^&-+=()), dan tanpa spasi.";
+    }
+
     @FXML
     private void handleSubmit() {
         String role = roleComboBox.getValue();
@@ -128,15 +147,26 @@ public class UserTableController {
             String nama = namaField.getText().trim();
             String pass = passwordField.getText().trim();
 
-            if ("Admin".equals(role)) {
-                String username = usernameField.getText().trim();
-                Admin admin = new Admin(-1, nama, pass, "Admin", -1, username);
-                userDAO.saveUser(admin);
-            } else {
-                String email = emailField.getText().trim();
-                Pelanggan pelanggan = new Pelanggan(-1, nama, pass, "Pelanggan", -1, email);
-                userDAO.saveUser(pelanggan);
+            User baru = "Admin".equals(role)
+                    ? new Admin(-1, nama, pass, "Admin", -1, detail)
+                    : new Pelanggan(-1, nama, pass, "Pelanggan", -1, detail);
+
+            if (!baru.validate()) {
+                showAlert("Data Tidak Valid", pesanValidasi(role));
+                return;
             }
+
+            if ("Admin".equals(role) && userDAO.isUsernameExists(detail, -1)) {
+                showAlert("Username Sudah Dipakai",
+                        "Username \"" + detail + "\" sudah digunakan. Pilih username lain.");
+                return;
+            }
+            if ("Pelanggan".equals(role) && userDAO.isEmailExists(detail)) {
+                showAlert("Email Sudah Dipakai", "Email \"" + detail + "\" sudah terdaftar.");
+                return;
+            }
+
+            userDAO.saveUser(baru);
             refreshTable();
             clearForm();
             showAlert("Sukses", "User berhasil ditambahkan!");
@@ -162,9 +192,29 @@ public class UserTableController {
             showAlert("Warning", "Nama, Password dan Email/Username tidak boleh kosong!");
             return;
         }
+        User temp = "Admin".equals(selectedRole)
+                ? new Admin(selected.getId(), namaField.getText().trim(), passwordField.getText().trim(), "Admin", -1,
+                        detail)
+                : new Pelanggan(selected.getId(), namaField.getText().trim(), passwordField.getText().trim(),
+                        "Pelanggan", -1, detail);
+
+        if (!temp.validate()) {
+            showAlert("Data Tidak Valid", pesanValidasi(selectedRole));
+            return;
+        }
+        try {
+            if ("Admin".equals(selectedRole) && userDAO.isUsernameExists(detail, selected.getId())) {
+                showAlert("Username Sudah Dipakai", "Username \"" + detail + "\" sudah digunakan admin lain.");
+                return;
+            }
+        } catch (SQLException e) {
+            showError("Database Error", e.getMessage());
+            return;
+        }
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin mengupdate user?", ButtonType.YES,
                 ButtonType.NO);
-                confirm.getDialogPane().getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
+        confirm.getDialogPane().getStylesheets()
+                .add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         confirm.showAndWait();
         if (confirm.getResult() == ButtonType.YES) {
             try {
@@ -204,9 +254,14 @@ public class UserTableController {
             showAlert("No Selection", "Pilih data user yang ingin dihapus.");
             return;
         }
+        if (currentUser != null && selected.getId() == currentUser.getId()) {
+            showAlert("Tidak Bisa", "Kamu tidak bisa menghapus akun yang sedang kamu pakai.");
+            return;
+        }
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin menghapus user?", ButtonType.YES,
                 ButtonType.NO);
-        confirm.getDialogPane().getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
+        confirm.getDialogPane().getStylesheets()
+                .add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         confirm.showAndWait();
         if (confirm.getResult() == ButtonType.YES) {
             try {
@@ -284,7 +339,8 @@ public class UserTableController {
         teksAtas.setStyle("-fx-font-weight: bold;");
 
         detail.getDialogPane().setContent(new VBox(10, teksAtas, detailTable));
-        detail.getDialogPane().getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
+        detail.getDialogPane().getStylesheets()
+                .add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         detail.showAndWait();
     }
 

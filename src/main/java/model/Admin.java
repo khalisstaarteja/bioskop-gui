@@ -1,11 +1,14 @@
 package main.java.model;
 
+import java.util.regex.Pattern;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Admin extends User implements Login {
+
     private final IntegerProperty adminId = new SimpleIntegerProperty();
     private final StringProperty username = new SimpleStringProperty();
 
@@ -29,6 +32,21 @@ public class Admin extends User implements Login {
     @Override
     public void signIn() {
        
+    }
+
+    public boolean validate() {
+        final String USERNAME_REGEX =
+            "^[a-zA-Z][a-zA-Z0-9._]{3,19}$";
+        final String PASSWORD_REGEX = 
+            "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&\\-+=()])(?=\\S+$).{8,20}$";
+
+        final Pattern USERNAME_PATTERN = Pattern.compile(USERNAME_REGEX);
+        final Pattern PATTERN = Pattern.compile(PASSWORD_REGEX);
+        if (getUsername() == null || getPassword() == null) {
+            return false;
+        }
+        return USERNAME_PATTERN.matcher(getUsername()).matches() && 
+                PATTERN.matcher(getPassword()).matches();
     }
 
     // Property Methods

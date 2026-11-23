@@ -18,14 +18,16 @@
       <Label text="Riwayat Pemesanan Tiket Anda" styleClass="page-title"/>
 
       <TableView fx:id="riwayatTable" VBox.vgrow="ALWAYS" prefHeight="400.0">
-        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
-        <columns>
-          <TableColumn fx:id="nomorColumn" text="No. Pesanan" prefWidth="60.0"/>
-          <TableColumn fx:id="filmColumn" text="Film" prefWidth="180.0"/>
-          <TableColumn fx:id="jadwalColumn" text="Jadwal Tayang" prefWidth="160.0"/>
-          <TableColumn fx:id="jumlahColumn" text="Jumlah Tiket" prefWidth="100.0"/>
-          <TableColumn fx:id="totalColumn" text="Total Harga" prefWidth="140.0"/>
-        </columns>
+         <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+         <columns>
+            <TableColumn fx:id="nomorColumn" text="No. Pesanan" prefWidth="90.0"/>
+            <TableColumn fx:id="filmColumn" text="Film" prefWidth="170.0"/>
+            <TableColumn fx:id="bioskopColumn" text="Bioskop" prefWidth="130.0"/>
+            <TableColumn fx:id="studioColumn" text="Studio" prefWidth="80.0"/>
+            <TableColumn fx:id="jadwalColumn" text="Jadwal Tayang" prefWidth="150.0"/>
+            <TableColumn fx:id="jumlahColumn" text="Jumlah Tiket" prefWidth="90.0"/>
+            <TableColumn fx:id="totalColumn" text="Total Harga" prefWidth="120.0"/>
+         </columns>
       </TableView>
       <HBox alignment="CENTER_RIGHT">
          <Button text="Cetak / Lihat Struk Tiket" onAction="#handleCetakTiket" styleClass="button"/>

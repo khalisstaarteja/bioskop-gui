@@ -18,6 +18,7 @@ public abstract class User {
         this.role.set(role);
     }
 
+    public abstract boolean validate();
     public abstract String showMenu();
 
     // Property Methods

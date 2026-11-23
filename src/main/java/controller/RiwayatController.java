@@ -28,6 +28,8 @@ public class RiwayatController {
     @FXML private TableColumn<Pemesanan, String> jadwalColumn;
     @FXML private TableColumn<Pemesanan, Integer> jumlahColumn;
     @FXML private TableColumn<Pemesanan, String> totalColumn;
+    @FXML private TableColumn<Pemesanan, String> bioskopColumn;
+    @FXML private TableColumn<Pemesanan, String> studioColumn;
     
     private final PemesananDAO pemesananDAO = new PemesananDAO();
     private User currentUser;
@@ -40,6 +42,12 @@ public class RiwayatController {
         }
         filmColumn.setCellValueFactory(c ->
             new SimpleStringProperty(c.getValue().getJadwal().getFilm().getJudul()));
+        bioskopColumn.setCellValueFactory(c ->
+            new SimpleStringProperty(
+                c.getValue().getJadwal().getStudio().getBioskop().getNamaBioskop()));
+        studioColumn.setCellValueFactory(c ->
+            new SimpleStringProperty(
+                "Studio " + c.getValue().getJadwal().getStudio().getNomorStudio()));
         jadwalColumn.setCellValueFactory(c ->
             new SimpleStringProperty(c.getValue().getJadwal().getTanggal() + " | " + c.getValue().getJadwal().getJam()));
         jumlahColumn.setCellValueFactory(c ->

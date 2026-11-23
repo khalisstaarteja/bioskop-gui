@@ -1,6 +1,10 @@
 package main.java.controller;
 
 import java.io.IOException;
+import java.sql.SQLException;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -10,15 +14,22 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import main.java.database.UserDAO;
 import main.java.model.Admin;
 import main.java.model.User;
+import javafx.util.Duration;
 
 public class DashboardController {
-    @FXML private BorderPane rootPane;
-    @FXML private TabPane mainTabPane;
-    @FXML private Label loggedUserLabel;
-    @FXML private VBox adminMenu;
-    @FXML private VBox pelangganMenu;
+    @FXML
+    private BorderPane rootPane;
+    @FXML
+    private TabPane mainTabPane;
+    @FXML
+    private Label loggedUserLabel;
+    @FXML
+    private VBox adminMenu;
+    @FXML
+    private VBox pelangganMenu;
 
     private User currentUser;
 
@@ -48,6 +59,7 @@ public class DashboardController {
 
             loadDefaultTab();
         }
+        startSessionCheck();
     }
 
     private String menuTextForTab(String tabTitle) {
@@ -69,7 +81,8 @@ public class DashboardController {
     // Untuk tau tab yang lagi aktif yang mana
     private void syncActiveMenu(Tab tab) {
         VBox menu = (currentUser instanceof Admin) ? adminMenu : pelangganMenu;
-        if (menu == null) return;
+        if (menu == null)
+            return;
 
         String target = menuTextForTab(tab.getText());
         for (Node n : menu.getChildren()) {
@@ -107,7 +120,8 @@ public class DashboardController {
     }
 
     private Object openTab(String title, String fxmlPath) {
-        if (mainTabPane == null) return null;
+        if (mainTabPane == null)
+            return null;
 
         for (Tab tab : mainTabPane.getTabs()) {
             if (tab.getText().equals(title)) {
@@ -139,7 +153,7 @@ public class DashboardController {
         }
     }
 
-    @FXML 
+    @FXML
     private void handleShowBeranda() {
         if (mainTabPane != null) {
             mainTabPane.getTabs().clear();
@@ -170,19 +184,54 @@ public class DashboardController {
     }
 
     // Navigasi Menu Admin
-    @FXML private void showBioskopView() { openTab("Data Bioskop", "/main/resources/bioskop_table.fxml"); }
-    @FXML private void showStudioView() { openTab("Data Studio", "/main/resources/studio_table.fxml"); }
-    @FXML private void showFilmView() { openTab("Data Film", "/main/resources/film_table.fxml"); }
-    @FXML private void showJadwalView() { openTab("Data Jadwal Tayang", "/main/resources/jadwalFilm_table.fxml"); }
-    @FXML private void showUserView() { openTab("Data Users", "/main/resources/user_table.fxml"); }
-    @FXML private void showPemesananAdminView() { openTab("Kelola Pemesanan", "/main/resources/pemesanan_table.fxml"); }
+    @FXML
+    private void showBioskopView() {
+        openTab("Data Bioskop", "/main/resources/bioskop_table.fxml");
+    }
+
+    @FXML
+    private void showStudioView() {
+        openTab("Data Studio", "/main/resources/studio_table.fxml");
+    }
+
+    @FXML
+    private void showFilmView() {
+        openTab("Data Film", "/main/resources/film_table.fxml");
+    }
+
+    @FXML
+    private void showJadwalView() {
+        openTab("Data Jadwal Tayang", "/main/resources/jadwalFilm_table.fxml");
+    }
+
+    @FXML
+    private void showUserView() {
+        openTab("Data Users", "/main/resources/user_table.fxml");
+    }
+
+    @FXML
+    private void showPemesananAdminView() {
+        openTab("Kelola Pemesanan", "/main/resources/pemesanan_table.fxml");
+    }
 
     // Navigasi Menu Pelanggan
-    @FXML private void showCariFilmView() { openTab("Cari Film", "/main/resources/cari_film.fxml"); }
-    @FXML private void showPemesananView() { openTab("Form Pemesanan Tiket", "/main/resources/pemesanan_view.fxml"); }
-    @FXML private void showRiwayatView() { openTab("Riwayat Pemesanan", "/main/resources/riwayat_table.fxml"); }
+    @FXML
+    private void showCariFilmView() {
+        openTab("Cari Film", "/main/resources/cari_film.fxml");
+    }
 
-    // Shortcut buat buka form pemesanan pas kita klik film card biar dia bisa autofill
+    @FXML
+    private void showPemesananView() {
+        openTab("Form Pemesanan Tiket", "/main/resources/pemesanan_view.fxml");
+    }
+
+    @FXML
+    private void showRiwayatView() {
+        openTab("Riwayat Pemesanan", "/main/resources/riwayat_table.fxml");
+    }
+
+    // Shortcut buat buka form pemesanan pas kita klik film card biar dia bisa
+    // autofill
     public void openPemesananWithJadwal(main.java.model.JadwalFilm jadwal) {
         Object ctrl = openTab("Form Pemesanan Tiket", "/main/resources/pemesanan_view.fxml");
         if (ctrl instanceof PemesananController) {
@@ -190,8 +239,10 @@ public class DashboardController {
         }
     }
 
-    @FXML 
+    @FXML
     private void handleLogout() {
+        if (sessionChecker != null)
+            sessionChecker.stop();
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/main/resources/login_view.fxml"));
             Stage stage = (Stage) rootPane.getScene().getWindow();
@@ -205,15 +256,54 @@ public class DashboardController {
 
     @FXML
     private void handleExit() {
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin keluar dari aplikasi?", ButtonType.YES, ButtonType.NO);
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin keluar dari aplikasi?", ButtonType.YES,
+                ButtonType.NO);
         confirm.setTitle("Konfirmasi Keluar");
         confirm.setHeaderText(null);
-        confirm.getDialogPane().getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
+        confirm.getDialogPane().getStylesheets()
+                .add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
 
         confirm.showAndWait();
         if (confirm.getResult() == ButtonType.YES) {
             javafx.application.Platform.exit();
             System.exit(0);
+        }
+    }
+
+    // supaya otomatis ke logout ketika menghapus akun yang sedang di login
+    private Timeline sessionChecker;
+
+    private void startSessionCheck() {
+        sessionChecker = new Timeline(new KeyFrame(Duration.seconds(5), e -> {
+            try {
+                if (!new UserDAO().existsById(currentUser.getId())) {
+                    sessionChecker.stop();
+                    javafx.application.Platform.runLater(this::forceLogout);
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }));
+        sessionChecker.setCycleCount(Timeline.INDEFINITE);
+        sessionChecker.play();
+    }
+
+    private void forceLogout() {
+        try {
+            Alert a = new Alert(Alert.AlertType.WARNING,
+                    "Akun kamu telah dihapus. Kamu akan keluar dari sistem.");
+            a.setHeaderText(null);
+            a.getDialogPane().getStylesheets()
+                    .add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
+            a.showAndWait();
+
+            Parent root = FXMLLoader.load(getClass().getResource("/main/resources/login_view.fxml"));
+            Stage stage = (Stage) rootPane.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Login Sistem Bioskop");
+            stage.show();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 }

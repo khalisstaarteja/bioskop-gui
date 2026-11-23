@@ -1,6 +1,8 @@
 package main.java.model;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -32,6 +34,22 @@ public class Pelanggan extends User implements Login {
     @Override
     public void signIn() {
         
+    }
+
+    public boolean validate() {
+        final String EMAIL_REGEX =
+            "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+)*" +
+            "@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$";
+        final String PASSWORD_REGEX = 
+            "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&\\-+=()])(?=\\S+$).{8,20}$";
+
+        final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
+        final Pattern PATTERN = Pattern.compile(PASSWORD_REGEX);
+        if (getEmail() == null || getPassword() == null) {
+            return false;
+        }
+        return EMAIL_PATTERN.matcher(getEmail()).matches() && 
+                PATTERN.matcher(getPassword()).matches();
     }
 
     // Memasukkan satu object Pemesanan ke dalam daftar pemesanan milik object ini

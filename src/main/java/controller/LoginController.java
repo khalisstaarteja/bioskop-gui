@@ -18,19 +18,30 @@ import main.java.model.User;
 
 public class LoginController {
     // Komponen form login
-    @FXML private GridPane loginPane;
-    @FXML private ComboBox<String> loginRoleComboBox; 
-    @FXML private Label identifierLabel;              
-    @FXML private TextField usernameOrEmailField;     
-    @FXML private PasswordField passwordField;
-    @FXML private Label errorLabel;
+    @FXML
+    private GridPane loginPane;
+    @FXML
+    private ComboBox<String> loginRoleComboBox;
+    @FXML
+    private Label identifierLabel;
+    @FXML
+    private TextField usernameOrEmailField;
+    @FXML
+    private PasswordField passwordField;
+    @FXML
+    private Label errorLabel;
 
     // Komponen form register pelanggan
-    @FXML private GridPane registerPane;
-    @FXML private TextField regNamaField;
-    @FXML private TextField regEmailField;
-    @FXML private PasswordField regPasswordField;
-    @FXML private Label regErrorLabel;
+    @FXML
+    private GridPane registerPane;
+    @FXML
+    private TextField regNamaField;
+    @FXML
+    private TextField regEmailField;
+    @FXML
+    private PasswordField regPasswordField;
+    @FXML
+    private Label regErrorLabel;
 
     private final UserDAO userDAO = new UserDAO();
 
@@ -60,7 +71,8 @@ public class LoginController {
     private void showRegisterForm(ActionEvent event) {
         loginPane.setVisible(false);
         registerPane.setVisible(true);
-        if (regErrorLabel != null) regErrorLabel.setText("");
+        if (regErrorLabel != null)
+            regErrorLabel.setText("");
     }
 
     // Kembali ke form login (dengan ActionEvent)
@@ -73,14 +85,15 @@ public class LoginController {
     private void showLoginForm() {
         registerPane.setVisible(false);
         loginPane.setVisible(true);
-        if (errorLabel != null) errorLabel.setText("");
+        if (errorLabel != null)
+            errorLabel.setText("");
     }
 
     // Logika Login (Admin & Pelanggan berdasarkan role yang dipilih)
     @FXML
     private void handleLogin(ActionEvent event) {
         String role = loginRoleComboBox.getValue();
-        String identifier = usernameOrEmailField.getText().trim(); 
+        String identifier = usernameOrEmailField.getText().trim();
         String password = passwordField.getText().trim();
 
         if (role == null || identifier.isEmpty() || password.isEmpty()) {
@@ -99,7 +112,7 @@ public class LoginController {
 
                 // Kirim data user yang sedang login ke DashboardController
                 DashboardController dashboardController = loader.getController();
-                dashboardController.setLoggedUser(user); 
+                dashboardController.setLoggedUser(user);
 
                 Stage stage = (Stage) usernameOrEmailField.getScene().getWindow();
                 stage.setScene(new Scene(root));
@@ -127,34 +140,44 @@ public class LoginController {
         }
 
         try {
-            // Cek apakah email sudah terdaftar di sistem
+            Pelanggan pelangganBaru = new Pelanggan(-1, nama, pass, "Pelanggan", -1, email);
+
+            // Validasi format email & password
+            if (!pelangganBaru.validate()) {
+                showAlert(Alert.AlertType.WARNING, "Data Tidak Valid",
+                        "Email harus berformat benar (contoh: nama@email.com).\n\n" +
+                        "Password harus 8-20 karakter, mengandung angka, huruf kecil, " +
+                        "huruf besar, 1 karakter spesial (!@#$%^&-+=()), dan tanpa spasi.");
+                return;
+            }
+
             if (userDAO.isEmailExists(email)) {
                 regErrorLabel.setText("Email ini sudah terdaftar! Silahkan gunakan email lain.");
                 return;
             }
 
-            // Buat objek Pelanggan baru dengan role "Pelanggan"
-            Pelanggan pelangganBaru = new Pelanggan(-1, nama, pass, "Pelanggan", -1, email);
-
-            
-            // Simpan ke database melalui UserDAO
             userDAO.saveUser(pelangganBaru);
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Registrasi Berhasil");
-            alert.setHeaderText(null);
-            alert.setContentText("Akun pelanggan berhasil dibuat! Silakan login menggunakan email Anda.");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.INFORMATION, "Registrasi Berhasil",
+                    "Akun pelanggan berhasil dibuat! Silakan login menggunakan email Anda.");
 
-            // Bersihkan form & kembali ke form login
             regNamaField.clear();
             regEmailField.clear();
             regPasswordField.clear();
             showLoginForm();
-
         } catch (Exception e) {
             regErrorLabel.setText("Gagal mendaftar: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.getDialogPane().getStylesheets()
+                .add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
+        alert.showAndWait();
     }
 }

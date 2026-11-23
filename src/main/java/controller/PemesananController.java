@@ -34,6 +34,11 @@ public class PemesananController {
     @FXML private TextField jumlahTiketField;
     @FXML private ComboBox<String> metodePembayaranComboBox;
     @FXML private Label totalHargaLabel;
+    @FXML private TableColumn<Pemesanan, String> bioskopColumn;
+    @FXML private TableColumn<Pemesanan, String> studioColumn;
+    @FXML private TableColumn<Pemesanan, String> idColumn;
+    @FXML private TableColumn<Pemesanan, String> pelangganColumn;
+    @FXML private TableColumn<Pemesanan, String> metodeColumn;
 
     // Riwayat
     @FXML private TableView<Pemesanan> riwayatTable;
@@ -89,9 +94,21 @@ public class PemesananController {
         // Setup Kolom Tabel Riwayat
         if (filmColumn != null) {
             filmColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getJadwal().getFilm().getJudul()));
+            bioskopColumn.setCellValueFactory(c ->
+                new SimpleStringProperty(
+                    c.getValue().getJadwal().getStudio().getBioskop().getNamaBioskop()));
+            studioColumn.setCellValueFactory(c ->
+                new SimpleStringProperty(
+                    "Studio " + c.getValue().getJadwal().getStudio().getNomorStudio()));
             jadwalColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getJadwal().getTanggal() + " | " + cell.getValue().getJadwal().getJam()));
             jumlahColumn.setCellValueFactory(cell -> cell.getValue().jumlahPemesananProperty().asObject());
             totalColumn.setCellValueFactory(cell -> new SimpleStringProperty("Rp " + String.format("%,.0f", cell.getValue().getTotalBayar())));
+            idColumn.setCellValueFactory(c ->
+                new SimpleStringProperty(String.valueOf(c.getValue().getNomorPemesanan())));
+            pelangganColumn.setCellValueFactory(c ->
+                new SimpleStringProperty(c.getValue().getUser().getNama()));
+            metodeColumn.setCellValueFactory(c ->
+                new SimpleStringProperty(c.getValue().getMetodePembayaran()));
         }
 
         refreshDataJadwal();

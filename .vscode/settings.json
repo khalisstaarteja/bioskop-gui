@@ -18,7 +18,19 @@
         "c:\\New folder\\Documents\\Kuliah\\Kuliah Semester 3\\Pemrograman Berbasis Objek\\javafx-sdk-27\\lib\\jdk.jsobject.jar",
         "c:\\New folder\\Documents\\Kuliah\\Kuliah Semester 3\\Pemrograman Berbasis Objek\\javafx-sdk-27\\lib\\jfx.incubator.input.jar",
         "c:\\New folder\\Documents\\Kuliah\\Kuliah Semester 3\\Pemrograman Berbasis Objek\\javafx-sdk-27\\lib\\jfx.incubator.richtext.jar",
-        "c:\\New folder\\Documents\\Kuliah\\Kuliah Semester 3\\Pemrograman Berbasis Objek\\javafx-sdk-27\\lib\\postgresql-42.7.14.jar"
+        "c:\\New folder\\Documents\\Kuliah\\Kuliah Semester 3\\Pemrograman Berbasis Objek\\javafx-sdk-27\\lib\\postgresql-42.7.14.jar",
+        "c:\\Users\\Velicia\\javafx-sdk\\javafx-sdk-27\\lib\\javafx.base.jar",
+        "c:\\Users\\Velicia\\javafx-sdk\\javafx-sdk-27\\lib\\javafx.controls.jar",
+        "c:\\Users\\Velicia\\javafx-sdk\\javafx-sdk-27\\lib\\javafx.fxml.jar",
+        "c:\\Users\\Velicia\\javafx-sdk\\javafx-sdk-27\\lib\\javafx.graphics.jar",
+        "c:\\Users\\Velicia\\javafx-sdk\\javafx-sdk-27\\lib\\javafx.media.jar",
+        "c:\\Users\\Velicia\\javafx-sdk\\javafx-sdk-27\\lib\\javafx.swing.jar",
+        "c:\\Users\\Velicia\\javafx-sdk\\javafx-sdk-27\\lib\\javafx.web.jar",
+        "c:\\Users\\Velicia\\javafx-sdk\\javafx-sdk-27\\lib\\javafx-swt.jar",
+        "c:\\Users\\Velicia\\javafx-sdk\\javafx-sdk-27\\lib\\jbcrypt-0.4.jar",
+        "c:\\Users\\Velicia\\javafx-sdk\\javafx-sdk-27\\lib\\jdk.jsobject.jar",
+        "c:\\Users\\Velicia\\javafx-sdk\\javafx-sdk-27\\lib\\jfx.incubator.input.jar",
+        "c:\\Users\\Velicia\\javafx-sdk\\javafx-sdk-27\\lib\\jfx.incubator.richtext.jar"
     ],
     "java.debug.settings.vmArgs": "--enable-native-access=ALL-UNNAMED -Dprism.lcdtext=false",
     "java.configuration.runtimes": [

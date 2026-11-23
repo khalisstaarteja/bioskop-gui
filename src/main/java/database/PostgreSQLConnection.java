@@ -6,8 +6,8 @@ import java.sql.SQLException;
 
 public class PostgreSQLConnection {
     private static final String URL = "jdbc:postgresql://localhost:5432/bioskop";
-    private static final String USER = "farla";
-    private static final String PASSWORD = "Lala280107";
+    private static final String USER = "Velicia";
+    private static final String PASSWORD = "FeelLikeSummer208";
 
     public static Connection getConnection() throws SQLException {
         // Explicitly register driver to prevent classpath issues in no-build setups

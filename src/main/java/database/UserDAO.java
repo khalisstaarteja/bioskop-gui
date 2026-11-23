@@ -1,4 +1,5 @@
 package main.java.database;
+
 import org.mindrot.jbcrypt.BCrypt;
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,23 +12,23 @@ public class UserDAO {
     // Autentikasi khusus berdasarkan role (Admin via Username, Pelanggan via Email)
     public User authenticateByRole(String role, String identifier, String password) throws SQLException {
         String sql = "";
-        
+
         if ("Admin".equalsIgnoreCase(role)) {
             sql = "SELECT u.id, u.nama, u.password, u.role, a.username " +
-                  "FROM users u " +
-                  "JOIN admin a ON u.id = a.admin_id " +
-                  "WHERE a.username = ? AND u.role = 'Admin'";
+                    "FROM users u " +
+                    "JOIN admin a ON u.id = a.admin_id " +
+                    "WHERE a.username = ? AND u.role = 'Admin'";
         } else if ("Pelanggan".equalsIgnoreCase(role)) {
             sql = "SELECT u.id, u.nama, u.password, u.role, p.email " +
-                  "FROM users u " +
-                  "JOIN pelanggan p ON u.id = p.pelanggan_id " +
-                  "WHERE p.email = ? AND u.role = 'Pelanggan'";
+                    "FROM users u " +
+                    "JOIN pelanggan p ON u.id = p.pelanggan_id " +
+                    "WHERE p.email = ? AND u.role = 'Pelanggan'";
         } else {
             return null;
         }
 
         try (Connection conn = PostgreSQLConnection.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, identifier);
 
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -70,15 +71,15 @@ public class UserDAO {
         String sql = "SELECT * FROM users";
 
         try (Connection conn = PostgreSQLConnection.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String nama = rs.getString("nama");
                 String password = rs.getString("password");
                 String role = rs.getString("role");
-                
+
                 User user;
 
                 if ("Admin".equalsIgnoreCase(role)) {
@@ -95,8 +96,7 @@ public class UserDAO {
                         }
                     }
                     user = new Admin(id, nama, password, "Admin", id, username);
-                }
-                else if ("Pelanggan".equalsIgnoreCase(role)) {
+                } else if ("Pelanggan".equalsIgnoreCase(role)) {
                     String email = "";
                     String sqlPelanggan = "SELECT email FROM pelanggan WHERE pelanggan_id = ?";
 
@@ -110,8 +110,7 @@ public class UserDAO {
                         }
                     }
                     user = new Pelanggan(id, nama, password, role, id, email);
-                }
-                else {
+                } else {
                     continue;
                 }
                 user.setId(id);
@@ -125,7 +124,7 @@ public class UserDAO {
     public boolean isEmailExists(String email) throws SQLException {
         String sql = "SELECT COUNT(*) FROM pelanggan WHERE email = ?";
         try (Connection conn = PostgreSQLConnection.getConnection();
-        PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, email);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -134,6 +133,18 @@ public class UserDAO {
             }
         }
         return false;
+    }
+    
+    public boolean isUsernameExists(String username, int excludeId) throws SQLException {
+        String sql = "SELECT 1 FROM admin WHERE LOWER(username) = LOWER(?) AND admin_id <> ?";
+        try (Connection conn = PostgreSQLConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ps.setInt(2, excludeId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        }
     }
 
     // Simpan data user baru
@@ -169,7 +180,7 @@ public class UserDAO {
             if ("Admin".equalsIgnoreCase(user.getRole())) {
                 try (PreparedStatement pstmtAdmin = conn.prepareStatement(sqlAdmin)) {
                     pstmtAdmin.setInt(1, generatedId);
-                    pstmtAdmin.setString(2, ((Admin)user).getUsername());
+                    pstmtAdmin.setString(2, ((Admin) user).getUsername());
                     pstmtAdmin.executeUpdate();
                 }
             }
@@ -193,9 +204,9 @@ public class UserDAO {
     public void updateUser(User user, int id) throws SQLException {
         try (Connection conn = PostgreSQLConnection.getConnection()) {
             conn.setAutoCommit(false);
-            try{
+            try {
                 try (PreparedStatement ps = conn.prepareStatement(
-                "UPDATE users SET nama = ?, password = ?, role = ? WHERE id = ?")) {
+                        "UPDATE users SET nama = ?, password = ?, role = ? WHERE id = ?")) {
                     ps.setString(1, user.getNama());
                     String pass = user.getPassword();
                     if (pass != null && !pass.startsWith("$2")) {
@@ -209,7 +220,7 @@ public class UserDAO {
 
                 if (user instanceof Admin) {
                     try (PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE admin SET username = ? WHERE admin_id = ?")) {
+                            "UPDATE admin SET username = ? WHERE admin_id = ?")) {
                         ps.setString(1, ((Admin) user).getUsername());
                         ps.setInt(2, id);
                         ps.executeUpdate();
@@ -218,7 +229,7 @@ public class UserDAO {
 
                 else if (user instanceof Pelanggan) {
                     try (PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE pelanggan SET email = ? WHERE pelanggan_id = ?")) {
+                            "UPDATE pelanggan SET email = ? WHERE pelanggan_id = ?")) {
                         ps.setString(1, ((Pelanggan) user).getEmail());
                         ps.setInt(2, id);
                         ps.executeUpdate();
@@ -261,6 +272,17 @@ public class UserDAO {
             } catch (SQLException e) {
                 conn.rollback();
                 throw e;
+            }
+        }
+    }
+
+    public boolean existsById(int id) throws SQLException {
+        String sql = "SELECT 1 FROM users WHERE id = ?";
+        try (Connection conn = PostgreSQLConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
             }
         }
     }

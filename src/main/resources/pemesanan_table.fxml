@@ -16,18 +16,20 @@
    </padding>
    <children>
       <Label text="Lihat Semua Data Pemesanan" styleClass="page-title"/>
-
+      <Button onAction="#handleDelete" styleClass="delete-btn" text="Delete" />
       <TableView fx:id="pemesananTable" VBox.vgrow="ALWAYS">
         <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
         <columns>
-          <TableColumn fx:id="idColumn" text="No. Pesanan" prefWidth="100.0"/>
-          <TableColumn fx:id="pelangganColumn" text="Nama Pelanggan" prefWidth="150.0"/>
-          <TableColumn fx:id="filmColumn" text="Film" prefWidth="200.0"/>
-          <TableColumn fx:id="jadwalColumn" text="Jadwal Tayang" prefWidth="150.0"/>
-          <TableColumn fx:id="jumlahColumn" text="Jumlah" prefWidth="70.0"/>
-          <TableColumn fx:id="totalColumn" text="Total Bayar" prefWidth="120.0"/>
-          <TableColumn fx:id="metodeColumn" text="Pembayaran" prefWidth="120.0"/>
-        </columns>
+            <TableColumn fx:id="idColumn" text="No. Pesanan" prefWidth="90.0"/>
+            <TableColumn fx:id="pelangganColumn" text="Nama Pelanggan" prefWidth="130.0"/>
+            <TableColumn fx:id="filmColumn" text="Film" prefWidth="160.0"/>
+            <TableColumn fx:id="bioskopColumn" text="Bioskop" prefWidth="130.0"/>
+            <TableColumn fx:id="studioColumn" text="Studio" prefWidth="80.0"/>
+            <TableColumn fx:id="jadwalColumn" text="Jadwal Tayang" prefWidth="140.0"/>
+            <TableColumn fx:id="jumlahColumn" text="Jumlah" prefWidth="60.0"/>
+            <TableColumn fx:id="totalColumn" text="Total Bayar" prefWidth="100.0"/>
+            <TableColumn fx:id="metodeColumn" text="Pembayaran" prefWidth="100.0"/>
+         </columns>
       </TableView>
    </children>
 </VBox>

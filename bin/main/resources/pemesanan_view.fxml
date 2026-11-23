@@ -68,13 +68,18 @@
          <Label text="Riwayat Pemesanan Anda" styleClass="section-title"/>
 
          <TableView fx:id="riwayatTable" prefHeight="260.0" minHeight="200.0" VBox.vgrow="ALWAYS">
-           <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
-           <columns>
-             <TableColumn fx:id="filmColumn" text="Judul Film" prefWidth="200.0"/>
-             <TableColumn fx:id="jadwalColumn" text="Jadwal Tayang" prefWidth="180.0"/>
-             <TableColumn fx:id="jumlahColumn" text="Jumlah" prefWidth="80.0"/>
-             <TableColumn fx:id="totalColumn" text="Total Bayar" prefWidth="140.0"/>
-           </columns>
+            <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+            <columns>
+               <TableColumn fx:id="idColumn" text="No. Pesanan" minWidth="100.0" prefWidth="100.0"/>
+               <TableColumn fx:id="pelangganColumn" text="Pelanggan" minWidth="110.0" prefWidth="120.0"/>
+               <TableColumn fx:id="filmColumn" text="Film" minWidth="160.0" prefWidth="180.0"/>
+               <TableColumn fx:id="bioskopColumn" text="Bioskop" minWidth="100.0" prefWidth="120.0"/>
+               <TableColumn fx:id="studioColumn" text="Studio" minWidth="80.0" prefWidth="80.0"/>
+               <TableColumn fx:id="jadwalColumn" text="Jadwal Tayang" minWidth="170.0" prefWidth="170.0"/>
+               <TableColumn fx:id="jumlahColumn" text="Jumlah" minWidth="70.0" prefWidth="70.0"/>
+               <TableColumn fx:id="totalColumn" text="Total Bayar" minWidth="110.0" prefWidth="110.0"/>
+               <TableColumn fx:id="metodeColumn" text="Pembayaran" minWidth="110.0" prefWidth="110.0"/>
+            </columns>
          </TableView>
 
          <HBox alignment="CENTER_RIGHT">
