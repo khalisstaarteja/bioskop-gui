@@ -82,10 +82,11 @@ public class UserTableController {
             createExtraField(newVal, null);
         });
 
-        userTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+       userTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 namaField.setText(newVal.getNama());
-                passwordField.setText(newVal.getPassword());
+                passwordField.clear(); // kosongkan, jangan tampilkan hash
+                passwordField.setPromptText("Kosongkan jika tidak ingin mengubah password");
                 roleComboBox.setValue(newVal.getRole());
                 createExtraField(newVal.getRole(), newVal);
             } else {
@@ -187,54 +188,68 @@ public class UserTableController {
         String detail = "Admin".equals(selectedRole)
                 ? usernameField.getText().trim()
                 : emailField.getText().trim();
+        String nama = namaField.getText().trim();
+        String passBaru = passwordField.getText().trim();
+        boolean passwordDiubah = !passBaru.isEmpty();
 
-        if (namaField.getText().trim().isEmpty() || passwordField.getText().trim().isEmpty() || detail.isEmpty()) {
-            showAlert("Warning", "Nama, Password dan Email/Username tidak boleh kosong!");
+        // Password tidak wajib saat update
+        if (nama.isEmpty() || detail.isEmpty()) {
+            showAlert("Warning", "Nama dan Email/Username tidak boleh kosong!");
             return;
         }
+
+        // Kalau password tidak diubah, pakai hash lama
+        String passUntukValidasi = passwordDiubah ? passBaru : selected.getPassword();
+        String passFinal = passUntukValidasi;
+
         User temp = "Admin".equals(selectedRole)
-                ? new Admin(selected.getId(), namaField.getText().trim(), passwordField.getText().trim(), "Admin", -1,
-                        detail)
-                : new Pelanggan(selected.getId(), namaField.getText().trim(), passwordField.getText().trim(),
-                        "Pelanggan", -1, detail);
+                ? new Admin(selected.getId(), nama, passUntukValidasi, "Admin", -1, detail)
+                : new Pelanggan(selected.getId(), nama, passUntukValidasi, "Pelanggan", -1, detail);
 
-        if (!temp.validate()) {
-            showAlert("Data Tidak Valid", pesanValidasi(selectedRole));
-            return;
+        // Validasi hanya kalau password diubah
+        if (passwordDiubah) {
+            if (!temp.validate()) {
+                showAlert("Data Tidak Valid", pesanValidasi(selectedRole));
+                return;
+            }
+        } else {
+            if (!validasiDetailSaja(selectedRole, detail)) {
+                showAlert("Data Tidak Valid", pesanDetail(selectedRole));
+                return;
+            }
         }
+
         try {
             if ("Admin".equals(selectedRole) && userDAO.isUsernameExists(detail, selected.getId())) {
                 showAlert("Username Sudah Dipakai", "Username \"" + detail + "\" sudah digunakan admin lain.");
+                return;
+            }
+            if ("Pelanggan".equals(selectedRole) && !detail.equalsIgnoreCase(((Pelanggan) selected).getEmail())
+                    && userDAO.isEmailExists(detail)) {
+                showAlert("Email Sudah Dipakai", "Email \"" + detail + "\" sudah terdaftar.");
                 return;
             }
         } catch (SQLException e) {
             showError("Database Error", e.getMessage());
             return;
         }
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin mengupdate user?", ButtonType.YES,
-                ButtonType.NO);
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin mengupdate user?",
+                ButtonType.YES, ButtonType.NO);
         confirm.getDialogPane().getStylesheets()
                 .add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
         confirm.showAndWait();
+
         if (confirm.getResult() == ButtonType.YES) {
             try {
-                selected.setNama(namaField.getText().trim());
-                selected.setPassword(passwordField.getText().trim());
+                selected.setNama(nama);
+                selected.setPassword(passFinal);
                 selected.setRole(selectedRole);
 
-                // Tampilan sesuai role
-                if ("Admin".equalsIgnoreCase(selectedRole)) {
-                    String username = usernameField.getText().trim();
-
-                    if (selected instanceof Admin) {
-                        ((Admin) selected).setUsername(username);
-                    }
-                } else if ("Pelanggan".equalsIgnoreCase(selectedRole)) {
-                    String email = emailField.getText().trim();
-
-                    if (selected instanceof Pelanggan) {
-                        ((Pelanggan) selected).setEmail(email);
-                    }
+                if (selected instanceof Admin && "Admin".equalsIgnoreCase(selectedRole)) {
+                    ((Admin) selected).setUsername(detail);
+                } else if (selected instanceof Pelanggan && "Pelanggan".equalsIgnoreCase(selectedRole)) {
+                    ((Pelanggan) selected).setEmail(detail);
                 }
 
                 userDAO.updateUser(selected, selected.getId());
@@ -247,6 +262,18 @@ public class UserTableController {
         }
     }
 
+    private boolean validasiDetailSaja(String role, String detail) {
+        if ("Admin".equals(role)) {
+            return detail.matches("^[A-Za-z][A-Za-z0-9._]{3,19}$");
+        }
+        return detail.matches("^[\\w.+-]+@[\\w-]+(\\.[\\w-]+)+$");
+    }
+
+    private String pesanDetail(String role) {
+        return "Admin".equals(role)
+                ? "Username 4-20 karakter, diawali huruf, hanya huruf/angka/titik/underscore."
+                : "Email harus berformat benar (contoh: nama@email.com).";
+    }
     @FXML
     private void handleDelete() {
         User selected = userTable.getSelectionModel().getSelectedItem();
