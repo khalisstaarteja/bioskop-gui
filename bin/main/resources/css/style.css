@@ -206,6 +206,12 @@
     -fx-text-fill: #2a1650;
 }
 
+.sidebar .sidebar-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+}
+
 .login-title {
     -fx-font-size: 28px;
     -fx-font-weight: bold;

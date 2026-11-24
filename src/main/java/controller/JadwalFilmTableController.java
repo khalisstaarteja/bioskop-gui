@@ -217,18 +217,26 @@ public class JadwalFilmTableController {
         }
 
         LocalDate tanggalPilihan = tanggalPicker.getValue();
-        // Pastikan tidak bisa input tanggal masa lalu lewat ketikan/bypass
+        if (tanggalPilihan == null) {
+            showAlert("Warning", "Tanggal harus dipilih!");
+            return;
+        }
         if (tanggalPilihan.isBefore(LocalDate.now())) {
             showAlert("Warning", "Tidak dapat memilih tanggal di masa lalu (sebelum hari ini)!");
             return;
         }
 
-        int kapasitasBaru = Integer.parseInt(kapasitasField.getText().trim());
+        int kapasitasBaru;
+        try {
+            kapasitasBaru = Integer.parseInt(kapasitasField.getText().trim());
+        } catch (NumberFormatException e) {
+            showAlert("Format Salah", "Kapasitas harus berupa angka!");
+            return;
+        }
         if (kapasitasBaru < selected.getKursiTerisi()) {
             showAlert("Warning", "Kapasitas baru (" + kapasitasBaru + ") tidak boleh lebih kecil dari kursi yang sudah terisi (" + selected.getKursiTerisi() + ")!");
             return;
         }
-
 
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Yakin ingin mengupdate jadwal?", ButtonType.YES, ButtonType.NO);
         confirm.getDialogPane().getStylesheets().add(getClass().getResource("/main/resources/css/style.css").toExternalForm());
@@ -248,7 +256,7 @@ public class JadwalFilmTableController {
                 clearForm();
                 showAlert("Sukses", "Jadwal film berhasil diupdate!");
             } catch (Exception e) {
-                showError("Update Error", e.getMessage());
+                showError("Update Error", "Kode sudah dipakai / format data salah!");
             }
         }
     }

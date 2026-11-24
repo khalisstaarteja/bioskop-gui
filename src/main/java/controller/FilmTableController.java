@@ -176,7 +176,7 @@ public class FilmTableController {
                 clearForm();
                 showAlert("Sukses", "Film berhasil diupdate!");
             } catch (Exception e) {
-                showError("Update Error", e.getMessage());
+                showError("Update Error", "Kode sudah dipakai / format angka salah!");
             }
         }
     }

@@ -56,7 +56,6 @@ public class RiwayatController {
             new SimpleStringProperty("Rp " + String.format("%,.0f", c.getValue().getTotalBayar())));
     }
 
-    // Dipanggil dari DashboardController.openTab setelah FXML dimuat
     public void initUser(User user) {
         this.currentUser = user;
         loadRiwayat();

@@ -19,7 +19,7 @@
                     </columnConstraints>
                     <children>
                         <Label text="Kode Jadwal:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <TextField fx:id="kodeJadwalField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <TextField fx:id="kodeJadwalField" promptText="Masukkan kode jadwal" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                         <Label text="Tanggal:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
                         <DatePicker fx:id="tanggalPicker" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="0" />
 
@@ -31,7 +31,7 @@
                         <Label text="Studio:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                         <ComboBox fx:id="studioComboBox" promptText="Pilih Studio..." maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Label text="Kapasitas Kursi:" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                        <TextField fx:id="kapasitasField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <TextField fx:id="kapasitasField" promptText="Contoh: 30" GridPane.columnIndex="3" GridPane.rowIndex="2" />
 
                         <Label text="Film:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
                         <ComboBox fx:id="filmComboBox" promptText="Pilih Film..." maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="3" />

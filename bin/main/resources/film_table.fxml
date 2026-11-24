@@ -21,14 +21,14 @@
                         </columnConstraints>
                         <children>
                             <Label text="Kode Film:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                            <TextField fx:id="kodeFilmField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                            <TextField fx:id="kodeFilmField" promptText="Masukkan kode film" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                             <Label text="Judul Film:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                            <TextField fx:id="judulField" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                            <TextField fx:id="judulField" promptText="Masukkan judul film" GridPane.columnIndex="3" GridPane.rowIndex="0" />
 
                             <Label text="Genre:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                            <TextField fx:id="genreField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <TextField fx:id="genreField" promptText="Masukkan genre" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                             <Label text="Durasi (Menit):" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                            <TextField fx:id="durasiField" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                            <TextField fx:id="durasiField" promptText="Contoh: 160" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 
                             <Label text="Poster:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                             <Button text="Pilih Gambar Poster" onAction="#handleChoosePoster" GridPane.columnIndex="1" GridPane.rowIndex="2" />

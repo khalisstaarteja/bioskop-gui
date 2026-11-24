@@ -19,9 +19,9 @@
                     </columnConstraints>
                     <children>
                         <Label text="Kode Studio:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <TextField fx:id="kodeStudioField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <TextField fx:id="kodeStudioField" promptText="Masukkan kode studio" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                         <Label text="Nomor Studio:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                        <TextField fx:id="nomorStudioField" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                        <TextField fx:id="nomorStudioField" promptText="Masukkan nomor studio" GridPane.columnIndex="3" GridPane.rowIndex="0" />
 
                         <Label text="Jenis Studio:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                         <ComboBox fx:id="jenisStudioComboBox" promptText="Pilih Jenis..." maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" />

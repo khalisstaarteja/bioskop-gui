@@ -116,7 +116,7 @@ public class LoginController {
 
                 Stage stage = (Stage) usernameOrEmailField.getScene().getWindow();
                 stage.setScene(new Scene(root));
-                stage.setTitle("Dashboard Sistem Bioskop");
+                stage.setTitle("Dashboard CineMax");
                 stage.show();
             } else {
                 errorLabel.setText("Gagal! " + role + " atau Password salah.");

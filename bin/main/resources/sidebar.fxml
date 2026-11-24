@@ -6,6 +6,7 @@
 
 <VBox spacing="12.0" styleClass="sidebar" prefWidth="230.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
    <children>
+      <Label fx:id="cinema" text="CineMax" styleClass="sidebar-title" wrapText="true"/>
       <Label fx:id="loggedUserLabel" text="Login sebagai: -" styleClass="user-label" wrapText="true"/>
 
       <!-- Menu Admin -->

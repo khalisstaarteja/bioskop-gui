@@ -19,12 +19,12 @@
                     </columnConstraints>
                     <children>
                         <Label text="Kode Bioskop:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <TextField fx:id="kodeBioskopField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <TextField fx:id="kodeBioskopField" promptText="Masukkan kode bioskop" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                         <Label text="Nama Bioskop:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                        <TextField fx:id="namaBioskopField" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                        <TextField fx:id="namaBioskopField" promptText="Masukkan nama bioskop" GridPane.columnIndex="3" GridPane.rowIndex="0" />
 
                         <Label text="Lokasi:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                        <TextField fx:id="lokasiField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="lokasiField" promptText="Masukkan lokasi" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
                         <HBox spacing="10.0" alignment="CENTER_RIGHT" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1">
                             <Button onAction="#handleSubmit" styleClass="submit-btn" text="Submit" />

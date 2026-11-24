@@ -142,7 +142,7 @@ public class StudioTableController {
                 clearForm();
                 showAlert("Sukses", "Studio berhasil diupdate!");
             } catch (Exception e) {
-                showError("Update Error", e.getMessage());
+                showError("Update Error", "Kode sudah dipakai / format angka salah!");
             }
         }
     }

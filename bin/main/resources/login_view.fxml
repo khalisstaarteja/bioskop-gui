@@ -15,7 +15,7 @@
             <ColumnConstraints hgrow="ALWAYS" minWidth="200" prefWidth="260"/>
         </columnConstraints>
 
-        <Label text="Login Sistem Bioskop" styleClass="login-title" GridPane.columnSpan="2" GridPane.halignment="CENTER"/>
+        <Label text="Login CineMax" styleClass="login-title" GridPane.columnSpan="2" GridPane.halignment="CENTER"/>
 
         <Label text="Login Sebagai:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
         <ComboBox fx:id="loginRoleComboBox" promptText="-- Pilih Role --" GridPane.rowIndex="1" GridPane.columnIndex="1" maxWidth="Infinity"/>

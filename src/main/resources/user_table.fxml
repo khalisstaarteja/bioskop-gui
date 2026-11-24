@@ -11,23 +11,29 @@
         <VBox styleClass="form-card">
             <children>
                 <GridPane hgap="15.0" vgap="12.0">
-                    <columnConstraints>
-                        <ColumnConstraints minWidth="100.0"/>
+                      <columnConstraints>
+                        <ColumnConstraints minWidth="130.0"/>
                         <ColumnConstraints hgrow="ALWAYS" percentWidth="35.0"/>
-                        <ColumnConstraints minWidth="100.0"/>
+                        <ColumnConstraints minWidth="130.0"/>
                         <ColumnConstraints hgrow="ALWAYS" percentWidth="35.0"/>
                     </columnConstraints>
                     <children>
                         <Label text="Nama:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <TextField fx:id="namaField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <TextField fx:id="namaField" promptText="Masukkan nama" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                         <Label text="Password:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                        <PasswordField fx:id="passwordField" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                        <PasswordField fx:id="passwordField" promptText="Masukkan password" GridPane.columnIndex="3" GridPane.rowIndex="0" />
 
                         <Label text="Role:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                         <ComboBox fx:id="roleComboBox" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
                         <!-- dynamic container untuk username admin / email pelanggan -->
-                        <VBox fx:id="dynamicFormContainer" spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="4" />
+                        <GridPane fx:id="dynamicFormContainer" hgap="15.0" vgap="10.0"
+                                    GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="4">
+                            <columnConstraints>
+                                <ColumnConstraints minWidth="130.0"/>
+                                <ColumnConstraints hgrow="ALWAYS" percentWidth="35.0"/>
+                            </columnConstraints>
+                        </GridPane>
 
                         <HBox spacing="10.0" alignment="CENTER_RIGHT" GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="3">
                             <Button onAction="#handleSubmit" styleClass="submit-btn" text="Submit" />

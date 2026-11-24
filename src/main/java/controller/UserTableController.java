@@ -2,14 +2,12 @@ package main.java.controller;
 
 import java.util.List;
 import java.sql.SQLException;
-import java.time.LocalDate;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import main.java.database.AdminDAO;
 import main.java.database.PelangganDAO;
@@ -21,24 +19,16 @@ import main.java.model.Pemesanan;
 import main.java.model.User;
 
 public class UserTableController {
-    @FXML
-    private TextField namaField;
-    @FXML
-    private PasswordField passwordField;
-    @FXML
-    private ComboBox<String> roleComboBox;
-    @FXML
-    private VBox dynamicFormContainer;
-    @FXML
-    private TableView<User> userTable;
-    @FXML
-    private TableColumn<User, String> extraColumn;
+    @FXML private TextField namaField;
+    @FXML private PasswordField passwordField;
+    @FXML private ComboBox<String> roleComboBox;
+    @FXML private GridPane dynamicFormContainer;
+    @FXML private TableView<User> userTable;
+    @FXML private TableColumn<User, String> extraColumn;
 
     // Field dinamis yang dimasukkan ke dalam dynamicFormContainer
     private TextField usernameField;
     private TextField emailField;
-    private final Label dynamicLabel = new Label();
-    private final TextField dynamicTextField = new TextField();
 
     private final UserDAO userDAO = new UserDAO();
     private final AdminDAO adminDAO = new AdminDAO();
@@ -106,25 +96,31 @@ public class UserTableController {
         selectedRole = selectedRole.trim();
 
         if ("Admin".equals(selectedRole)) {
-            Label label = new Label("Username Admin: ");
+            Label label = new Label("Username Admin:");
             usernameField = new TextField();
+            usernameField.setPromptText("Masukkan username admin");
+            usernameField.setMaxWidth(Double.MAX_VALUE);
             if (u instanceof Admin) {
                 usernameField.setText(((Admin) u).getUsername());
             }
-            dynamicFormContainer.getChildren().add(new HBox(10, label, usernameField));
+            dynamicFormContainer.add(label, 0, 0);
+            dynamicFormContainer.add(usernameField, 1, 0);
         } else if ("Pelanggan".equals(selectedRole)) {
-            Label label = new Label("Email Pelanggan: ");
+            Label label = new Label("Email Pelanggan:");
             emailField = new TextField();
+            emailField.setPromptText("Contoh: nama@gmail.com");
+            emailField.setMaxWidth(Double.MAX_VALUE);
             if (u instanceof Pelanggan) {
                 emailField.setText(((Pelanggan) u).getEmail());
             }
-            dynamicFormContainer.getChildren().add(new HBox(10, label, emailField));
+            dynamicFormContainer.add(label, 0, 0);
+            dynamicFormContainer.add(emailField, 1, 0);
         }
 
         dynamicFormContainer.setVisible(true);
         dynamicFormContainer.setManaged(true);
     }
-
+    
     private String pesanValidasi(String role) {
         String detail = "Admin".equals(role)
                 ? "Username 4-20 karakter, diawali huruf, hanya huruf/angka/titik/underscore."

@@ -97,7 +97,7 @@ public class BioskopTableController {
                 clearForm();
                 showAlert("Sukses", "Bioskop berhasil diupdate!");
             } catch (Exception e) {
-                showError("Update Error", "Format angka salah!");
+                showError("Update Error", "Kode sudah dipakai!");
             }
         }
     }

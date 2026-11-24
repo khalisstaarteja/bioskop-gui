@@ -15,7 +15,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/main/resources/login_view.fxml"));
         Scene scene = new Scene(root, 800, 600);
 
-        primaryStage.setTitle("Login Sistem Bioskop");
+        primaryStage.setTitle("Login CineMax");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

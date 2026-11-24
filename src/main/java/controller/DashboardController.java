@@ -247,7 +247,7 @@ public class DashboardController {
             Parent root = FXMLLoader.load(getClass().getResource("/main/resources/login_view.fxml"));
             Stage stage = (Stage) rootPane.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.setTitle("Login Sistem Bioskop");
+            stage.setTitle("Login CineMax");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -300,7 +300,7 @@ public class DashboardController {
             Parent root = FXMLLoader.load(getClass().getResource("/main/resources/login_view.fxml"));
             Stage stage = (Stage) rootPane.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.setTitle("Login Sistem Bioskop");
+            stage.setTitle("Login CineMax");
             stage.show();
         } catch (IOException ex) {
             ex.printStackTrace();
